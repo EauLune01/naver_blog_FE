@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="prolog.css">
+    <title>SG Blog</title>
+    <style>
+        .user-profilepicture {
+            width:135px;
+        }
+
+        .buttons {
+            padding-top:20px;
+        }
+
+        #neighbor-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 한 줄에 3명 */
+        gap: 5px; /* 간격 조정 */
+        padding: 5px;
+        }
+
+    .neighbor-item {
+        text-align: center;
+        width: 50px; /* 너비 고정 */
+    }
+
+    .neighbor-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid gray;
+        overflow: hidden;
+    }
+
+    .neighbor-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지 꽉 차게 */
+        display: block;
+    }
+
+    .neighbor-nickname {
+        display: block;
+        font-size: 10px; /* 글자 크기 줄이기 */
+        margin-top: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    </style>
+
+    <script>
+        function popup(){
+            var url = "./neighbor_request.html";
+            var name = "_blank";
+            var option = "width = 480, height = 300, top = 100, left = 200, location = no"
+            window.open(url, name, option);
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <div class="top_menubar">
+        <a style="margin-left:50px;">이웃 블로그</a>
+        <a style="color: gray;"> | </a>
+        <a style="color:black; text-decoration-line: none;" href="./main_login.html">블로그 홈</a>
+        <a style="color: gray;"> | </a>
+        <a href="./main.html" class="login_btn">로그아웃</a>
+    </div>
+    <div id="top-area">
+        <div id="blog-title">
+        <table role="presentation">
+            <tbody>
+                <tr>
+                    <td id="blogTitleText">
+                        <h1><a id="blog-title-anchor" >
+                            <span id="blogTitleName" class="itemtitlefont">블로그 제목</span>
+                        </a></h1>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        
+        <div id="blog-menu">
+            <div class="border">
+                    <table>
+                        <tbody><tr><td nowrap="nowrap" class="menu1">
+                            <ul>
+                                <li>                        
+                                    <a style="color:#861f1c; font-weight: bold;">프롤로그</a>
+                                </li>
+                                <li> | </li>
+                                <li>                       
+                                    <a href="./myblog.html" style="color : black; text-decoration-line: none;">블로그</a>
+                                </li>      
+                            </ul>
+                        </td></tr></tbody>
+                    </table>
+            </div>
+        </div>
+        <hr style="margin-left: 140px;">
+    </div>
+
+    
+<!--프로필-->
+<div class="bg-body"> 
+    <div class="con"> 
+        <p class="image"> 
+            <a href="#" >
+                <img class="user-profilepicture" src="assets/profile.png" alt="프로필 이미지">
+            </a> 
+        </p> 
+    </div> 
+    <div class="name align"> 
+        <div class="user-nickname"> <strong class="itemfont col" id="nickNameArea">사용자본인</strong>
+                <br> <span class="itemfont col">
+                    <span class="blog_domain col"> </span> </span> 
+                
+            </div> 
+        </div> <p class="caption align"> 
+            <span class="itemfont_col">프로필 소개</span>
+            </p>
+                <p class="more align"> <span class="m1">
+        </p> 
+        <div class="buttons">
+            <button class="write" onclick="location.href='write.html'">글쓰기</button>
+            <button class="settings" onclick="location.href='profile.html'">프로필 관리</button>
+        </div>
+            
+    </div> 
+</div>
+
+<!--서로이웃-->
+<div class="bg-neighbor"> 
+    <div class="neighbor-profile">
+        <div class="user-nickname" style="font-size: 15px;"><strong></strong></div>
+        <div>이웃 커넥트</div>
+    </div>
+    <div class="neighbor-list">
+        <div class="all_neighborhood">
+            <span>전체 이웃</span>
+            <span id="neighbor-count" style="margin-left: 10px; color: green;">0</span><span>명</span>
+            <hr style="width:95%; border: 0.25px solid gray;">
+        </div>
+        <div id="neighbor-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;"></div>
+
+        <!-- 페이지네이션 -->
+        <div id="pagination" style="text-align: center; margin-top: 10px;">
+            <span id="page-indicator">1 / 1</span>
+            <button id="prev-page" style="background: none; border: none; cursor: pointer;">◀</button>
+            <button id="next-page" style="background: none; border: none; cursor: pointer;">▶</button>
+        </div>
+
+        <hr style="width:80%; border: 0.25px solid gray;">
+        <a id="neighbor-new-posts" href="main_login.html" style="margin-left:10px; font-size: 13px; color:gray;"></a>
+    </div>
+</div>
+
+
+
+
+<div class="pro_posts">
+    <!-- ✅ JS가 동적으로 게시물을 삽입할 예정 -->
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+                const accessToken = localStorage.getItem("access_token");
+                if (!accessToken) {
+                    alert("로그인이 필요합니다.");
+                    window.location.href = "login.html";
+                    return;
+                }
+            
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`,
+                            "Content-Type": "application/json"
+                        }
+                    });
+            
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        const nickname = data.username || "익명"; // 닉네임 가져오기
+                        const profilePic = data.user_pic || "assets/profile.png"; // 프로필 사진 가져오기\
+                        const blogname = data.blog_name || "블로그 제목";
+                        const intro = data.intro || "프로필 소개글";
+            
+                        // 🔥 닉네임 변경
+                        document.querySelectorAll(".user-nickname").forEach(el => {
+                            el.innerText = nickname;
+                        });
+            
+                        // 🔥 프로필 사진 변경
+                        document.querySelectorAll(".user-profilepicture").forEach(img => {
+                            img.src = profilePic;
+                        });
+
+                        document.querySelectorAll(".itemtitlefont").forEach(e2 => {
+                            e2.innerText = blogname;
+                        });
+
+                        document.querySelectorAll(".itemfont_col").forEach(e3 => {
+                            e3.innerText = intro;
+                        });
+            
+                    } else {
+                        alert("사용자 정보를 불러올 수 없습니다.");
+                        console.log("❌ 응답 상태 코드:", response.status);
+                    }
+                } catch (error) {
+                    console.error("❌ 서버 연결 오류:", error);
+                    alert("서버 연결에 실패했습니다.");
+                }
+            });
+
+
+
+            document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        // ✅ 현재 프로필 정보를 가져와서 블로그 주인의 `urlname`을 얻기
+        const profileResponse = await fetch("http://127.0.0.1:8000/profile/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!profileResponse.ok) {
+            console.error("❌ 프로필 정보 불러오기 실패:", profileResponse.status);
+            return;
+        }
+
+        const profileData = await profileResponse.json();
+        const urlname = profileData.urlname; // ✅ `urlname` 사용
+
+        if (!urlname) {
+            console.error("❌ urlname을 찾을 수 없음.");
+            return;
+        }
+
+        const apiUrl = `http://127.0.0.1:8000/posts/${urlname}/current/`;
+
+        // ✅ 게시물 가져오기
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            console.error("❌ 데이터 불러오기 실패:", response.status);
+            return;
+        }
+
+        const posts = await response.json();
+        const postContainer = document.querySelector(".pro_posts"); // ✅ 게시물을 담을 컨테이너
+        postContainer.innerHTML = ""; // 기존 내용 비우기
+
+        if (posts.length === 0) {
+            postContainer.innerHTML = "<p>게시물이 없습니다.</p>";
+            return;
+        }
+
+        let postHtml = "";
+
+        // ✅ 1, 2번 (왼쪽 큰 공간)
+        if (posts.length >= 1) {
+            postHtml += createBigPost(posts[0], 1); // 첫 번째 게시물
+        }
+        if (posts.length >= 2) {
+            postHtml += createBigPost(posts[1], 2); // 두 번째 게시물
+        }
+
+        // ✅ 3, 4, 5번 (오른쪽 작은 공간)
+        if (posts.length > 2) {
+            postHtml += `<div class="pro_sy2">`;
+            for (let i = 2; i < posts.length; i++) {
+                postHtml += createSmallPost(posts[i], i + 1); // 3, 4, 5번째 게시물
+            }
+            postHtml += `</div>`;
+        }
+
+        postContainer.innerHTML = postHtml;
+
+        // ✅ 게시물 클릭 이벤트 (이미 정해진 `n`값으로 이동)
+        document.querySelectorAll(".pro_sy1, .clear").forEach(postElement => {
+            postElement.addEventListener("click", function () {
+                const postNumber = this.dataset.postNumber; // ✅ dataset에서 post 순번 가져오기
+                if (postNumber) {
+                    window.location.href = `http://127.0.0.1:5500/myblog.html?n=${postNumber}`;
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+});
+
+function createBigPost(post, index) {
+    const { id, title, content, created_at, images } = post;
+    
+    // ✅ 대표 이미지 선택 (is_representative이 true인 이미지)
+    const representativeImage = images.find(img => img.is_representative) || images[0];
+    const imageUrl = representativeImage ? representativeImage.image_url : "https://via.placeholder.com/183x185?text=No+Image";
+
+    return `
+        <div class="pro_sy1" data-post-id="${id}" data-post-number="${index}"> <!-- ✅ 게시물 ID와 순번 추가 -->
+            <p class="p_img">            
+                <img src="${imageUrl}" width="183" height="185" alt="${title}">
+            </p>
+            <ul>
+                <li class="p_title">${title}</li>
+                <li class="p_con">${content.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 50)}...</li>
+                <li class="p_date">${new Date(created_at).toLocaleDateString()}</li>
+            </ul>
+        </div>
+    `;
+}
+
+function createSmallPost(post, index) {
+    const { id, title, content, created_at, images } = post;
+
+    // ✅ 대표 이미지 선택 (is_representative이 true인 이미지)
+    const representativeImage = images.find(img => img.is_representative) || images[0];
+    const imageUrl = representativeImage ? representativeImage.image_url : "https://via.placeholder.com/90x90?text=No+Image";
+
+    return `
+        <div class="clear" data-post-id="${id}" data-post-number="${index}"> <!-- ✅ 게시물 ID와 순번 추가 -->
+            <p class="p_img2">
+                <img src="${imageUrl}" width="90" height="90" alt="${title}">
+            </p>
+            <ul>
+                <li class="p_title">${title}</li>
+                <li class="p_con">${content.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 50)}...</li>
+                <li class="p_date">${new Date(created_at).toLocaleDateString()}</li>
+            </ul>
+        </div>
+    `;
+}
+
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        // ✅ 현재 로그인된 사용자 정보 가져오기
+        const profileResponse = await fetch("http://127.0.0.1:8000/profile/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!profileResponse.ok) {
+            console.error("❌ 프로필 정보 불러오기 실패:", profileResponse.status);
+            return;
+        }
+
+        const profileData = await profileResponse.json();
+        const loggedInUrlname = profileData.urlname; // ✅ 로그인된 사용자의 urlname 가져오기
+        const username = profileData.username;
+
+        if (!loggedInUrlname) {
+            console.error("❌ urlname을 찾을 수 없음.");
+            return;
+        }
+
+        // ✅ 이웃 목록 가져오기
+        const neighborsResponse = await fetch(`http://127.0.0.1:8000/profile/${loggedInUrlname}/neighbors/`);
+        if (!neighborsResponse.ok) {
+            console.error("❌ 이웃 목록 불러오기 실패:", neighborsResponse.status);
+            return;
+        }
+        const neighborsData = await neighborsResponse.json();
+        const neighbors = neighborsData.neighbors;
+
+        // ✅ 전체 이웃 수 가져오기
+        const countResponse = await fetch(`http://127.0.0.1:8000/neighbors/count/${loggedInUrlname}/`);
+        if (!countResponse.ok) {
+            console.error("❌ 이웃 수 불러오기 실패:", countResponse.status);
+            return;
+        }
+        const countData = await countResponse.json();
+        const neighborCount = countData.neighbor_count;
+
+        document.getElementById("neighbor-count").innerText = neighborCount;
+        document.getElementById("neighbor-new-posts").innerText = `${username}님 이웃의 새글 보기 >`;
+
+        // ✅ 이웃 리스트 페이지네이션 적용
+        const neighborContainer = document.getElementById("neighbor-container");
+        const pageIndicator = document.getElementById("page-indicator");
+        const prevPageBtn = document.getElementById("prev-page");
+        const nextPageBtn = document.getElementById("next-page");
+
+        let currentPage = 1;
+        const itemsPerPage = 12; // ✅ 한 페이지당 3명 x 4줄 = 12명
+        const totalPages = Math.ceil(neighbors.length / itemsPerPage);
+
+        function renderNeighbors(page) {
+            neighborContainer.innerHTML = "";
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageNeighbors = neighbors.slice(start, end);
+
+            pageNeighbors.forEach(neighbor => {
+                const { urlname, username, user_pic } = neighbor;
+                const imageUrl = user_pic.startsWith("/media") ? `http://127.0.0.1:8000${user_pic}` : user_pic;
+
+                // ✅ 로그인된 사용자와 같으면 `myblog.html`, 다르면 `blog.html?urlname=XXX`
+                const targetPage = (loggedInUrlname === urlname) ? "myblog.html" : `blog.html?urlname=${encodeURIComponent(urlname)}`;
+
+                const neighborHtml = `
+                    <div class="neighbor-item" style="text-align: center;">
+                        <a href="${targetPage}">
+                            <div class="neighbor-img">
+                                <img src="${imageUrl}" alt="${username}" style="cursor: pointer;">
+                            </div>
+                        </a>
+                        <a href="${targetPage}" style="text-decoration: none; color: inherit;">
+                            <span class="neighbor-nickname" style="cursor: pointer;">${username}</span>
+                        </a>
+                    </div>
+                `;
+                neighborContainer.innerHTML += neighborHtml;
+            });
+
+            pageIndicator.innerText = `${currentPage} / ${totalPages}`;
+        }
+
+        prevPageBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderNeighbors(currentPage);
+            }
+        });
+
+        nextPageBtn.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderNeighbors(currentPage);
+            }
+        });
+
+        renderNeighbors(currentPage);
+
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+});
+
+</script>
+</body>
+</html>

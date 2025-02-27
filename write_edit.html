@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="write.css" />
+    <title>SG BLOG 게시물 수정</title>
+
+    <!-- Google Fonts 추가 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Noto+Serif+KR&family=Gaegu&family=Nanum+Pen+Script&family=Black+And+White+Picture&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      function popup() {
+        var url = "./temp_save.html";
+        var name = "temp_save";
+        var option =
+          "width = 480, height = 300, top = 100, left = 200, location = no";
+        window.open(url, name, option);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- 상단 헤더 -->
+    <div class="header">
+      <div class="logo">SG Blog</div>
+      <div class="buttons">
+        <button onclick="popup()">임시 저장 글 불러오기</button>
+        <button onclick="openEditSavePopup()">수정 / 발행</button>
+        <button onclick="deletePost()">게시물 삭제</button>
+      </div>
+    </div>
+
+    <!-- 도구 모음 -->
+    <div class="toolbar">
+      <button onclick="openImageUploader()">사진</button>
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        onchange="insertImage(event)"
+      />
+    </div>
+
+    <!-- 글꼴 및 크기 설정 바 -->
+    <div class="topbar">
+      <select id="fontSelect" onchange="changeFontFamily()">
+        <option value="'Nanum Gothic', sans-serif">나눔고딕</option>
+        <option value="'Noto Serif KR', serif">Noto Serif</option>
+        <option value="'Gaegu', cursive">Gaegu</option>
+        <option value="'Nanum Pen Script', cursive">나눔펜</option>
+        <option value="'Black And White Picture', cursive">
+          Black & White
+        </option>
+      </select>
+
+      <select id="fontSizeSelect" onchange="changeFontSize()">
+        <option value="1">11</option>
+        <option value="2">13</option>
+        <option value="3">15</option>
+        <option value="4">16</option>
+        <option value="5">19</option>
+        <option value="6">24</option>
+        <option value="7">28</option>
+        <option value="8">30</option>
+        <option value="9">34</option>
+        <option value="10">38</option>
+      </select>
+
+      <img
+        class="lineup"
+        src="assets/left.png"
+        onclick="changeAlignment('left')"
+      />
+      <img
+        class="lineup"
+        src="assets/middle.png"
+        onclick="changeAlignment('center')"
+      />
+      <img
+        class="lineup"
+        src="assets/right.png"
+        onclick="changeAlignment('right')"
+      />
+      <img class="bold" src="assets/bold.png" onclick="toggleBold()" />
+    </div>
+
+    <!-- 글 작성 컨테이너 -->
+    <div class="editor-container">
+      <div class="editor">
+        <div contenteditable="true" class="title" id="titleField">제목</div>
+        <div contenteditable="true" class="content" id="contentField">
+          본문을 입력하세요...
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function changeAlignment(alignment) {
+        document.execCommand("justify" + alignment);
+      }
+
+      function toggleBold() {
+        document.execCommand("bold");
+      }
+
+      document.addEventListener("selectionchange", function () {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const parentNode = range.commonAncestorContainer.parentNode;
+
+          if (parentNode) {
+            const computedStyle = window.getComputedStyle(parentNode);
+            document.getElementById("fontSelect").value =
+              computedStyle.fontFamily;
+            document.getElementById("fontSizeSelect").value =
+              computedStyle.fontSize.replace("px", "");
+          }
+        }
+      });
+
+      //사진을 넣을 수 있게 하는 기능
+      function openImageUploader() {
+        document.getElementById("imageInput").click();
+      }
+
+      document
+        .getElementById("titleField")
+        .addEventListener("focus", function () {
+          if (this.textContent === "제목") {
+            this.textContent = "";
+            this.style.color = "black";
+          }
+        });
+
+      document
+        .getElementById("titleField")
+        .addEventListener("blur", function () {
+          if (this.textContent.trim() === "") {
+            this.textContent = "제목";
+            this.style.color = "#aaa";
+          }
+        });
+
+      document
+        .getElementById("contentField")
+        .addEventListener("focus", function () {
+          if (this.textContent === "본문을 입력하세요...") {
+            this.textContent = "";
+            this.style.color = "black";
+          }
+        });
+
+      document
+        .getElementById("contentField")
+        .addEventListener("blur", function () {
+          if (this.textContent.trim() === "") {
+            this.textContent = "본문을 입력하세요...";
+            this.style.color = "#aaa";
+          }
+        });
+
+      function changeFontFamily() {
+        let selectedFont = document.getElementById("fontSelect").value;
+        document.execCommand("styleWithCSS", false, true); // CSS 적용 활성화
+        document.execCommand("fontName", false, selectedFont);
+      }
+
+      function changeFontSize() {
+        let selectedSize = document.getElementById("fontSizeSelect").value;
+        document.execCommand("styleWithCSS", false, true);
+        document.execCommand("fontSize", false, selectedSize); // 임시 크기 설정
+
+        // 선택된 텍스트에 적용된 font-size를 변경
+        let fontElements = document.querySelectorAll("font[size='7']");
+        fontElements.forEach((el) => {
+          el.removeAttribute("size");
+          el.style.fontSize = selectedSize + "px";
+        });
+      }
+
+      document.addEventListener("selectionchange", function () {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const parentNode = range.commonAncestorContainer.parentNode;
+
+          if (parentNode) {
+            const computedStyle = window.getComputedStyle(parentNode);
+            document.getElementById("fontSelect").value =
+              computedStyle.fontFamily;
+            document.getElementById("fontSizeSelect").value =
+              computedStyle.fontSize.replace("px", "");
+          }
+        }
+      });
+
+      //------------------------------------------------------------------------
+      //게시글 데이터를 불러와서 화면에 편집 가능한 상태로 띄우기
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const postId = new URLSearchParams(window.location.search).get("id");
+
+        if (!postId) {
+          alert("잘못된 접근입니다.");
+          window.location.href = "/myblog.html";
+          return;
+        }
+
+        try {
+          const accessToken = localStorage.getItem("access_token");
+
+          if (!accessToken) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/login.html";
+            return;
+          }
+
+          let apiUrl = `http://127.0.0.1:8000/posts/me/${postId}/`; // ✅ 기본값: 게시 완료된 글
+          let response = await fetch(apiUrl, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+
+          // ✅ 게시 완료된 글이 없으면, 자동으로 임시저장 API 요청
+          if (response.status === 404) {
+            console.log(
+              "📌 게시 완료된 글이 없으므로 임시저장 글을 조회합니다..."
+            );
+            apiUrl = `http://127.0.0.1:8000/posts/drafts/${postId}/`; // ✅ 임시저장 API
+            response = await fetch(apiUrl, {
+              method: "GET",
+              headers: { Authorization: `Bearer ${accessToken}` },
+            });
+          }
+
+          if (response.status === 403) {
+            alert("🚨 다른 사용자의 게시물은 수정할 수 없습니다.");
+            window.location.href = "/myblog.html";
+            return;
+          }
+
+          if (response.status === 404) {
+            alert("❌ 게시물을 찾을 수 없습니다.");
+            window.location.href = "/myblog.html";
+            return;
+          }
+
+          if (response.status === 401) {
+            alert("🔒 로그인 세션이 만료되었습니다. 다시 로그인하세요.");
+            window.location.href = "/login.html";
+            return;
+          }
+
+          if (!response.ok) {
+            throw new Error("게시물을 불러올 수 없습니다.");
+          }
+
+          // ✅ 게시물 데이터 저장
+          const postData = await response.json();
+
+          // ✅ 제목 채우기
+          document.getElementById("titleField").innerText = postData.title;
+
+          // ✅ 본문 내 이미지 URL을 BASE64 변환 후 적용
+          const updatedContent = await replaceImageUrlsWithBase64(
+            postData.content,
+            postData.images
+          );
+          document.getElementById("contentField").innerHTML = updatedContent;
+        } catch (error) {
+          console.error("🚨 게시물 불러오기 실패:", error);
+        }
+      });
+
+      // ✅ 이미지 URL을 BASE64로 변환하는 함수
+      async function convertImageUrlToBase64(url) {
+        try {
+          const response = await fetch(url);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (error) {
+          console.error("🚨 이미지 변환 실패:", error);
+          return url; // 변환 실패 시 원본 URL 유지
+        }
+      }
+
+      // ✅ content 내부 이미지 URL을 BASE64로 변환하여 적용
+      async function replaceImageUrlsWithBase64(content) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = content;
+        const images = tempDiv.querySelectorAll("img");
+
+        const imagePromises = Array.from(images).map(async (img) => {
+          let imageUrl = img.getAttribute("src");
+
+          // ✅ 이미지가 이미 BASE64인 경우 변환하지 않음
+          if (imageUrl.startsWith("data:image")) {
+            return;
+          }
+
+          // ✅ 상대 경로를 절대 경로로 변경
+          if (imageUrl.startsWith("/media")) {
+            imageUrl = `http://127.0.0.1:8000${imageUrl}`;
+          }
+
+          const base64Data = await convertImageUrlToBase64(imageUrl);
+          img.src = base64Data; // ✅ BASE64 변환 후 이미지 src 변경
+        });
+
+        await Promise.all(imagePromises); // 모든 이미지 변환 완료 후 적용
+        return tempDiv.innerHTML;
+      }
+
+      //==================================================================================
+
+      document.addEventListener("DOMContentLoaded", function () {
+        let selectedImage = null; // 현재 선택된 대표사진
+
+        function insertImage(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const figure = document.createElement("figure");
+            figure.style.textAlign = "center";
+            figure.style.margin = "15px 0";
+            figure.style.position = "relative"; // 버튼을 위한 position 설정
+
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.maxWidth = "300px";
+            img.style.height = "auto";
+            img.style.marginTop = "10px";
+            img.style.borderRadius = "5px";
+            img.style.cursor = "pointer";
+            img.classList.add("editable-image"); // 이미지에 클래스 추가
+
+            const uniqueId = "caption_" + crypto.randomUUID(); // UUID 기반 ID 생성
+            const caption = document.createElement("figcaption");
+            caption.contentEditable = "true";
+            caption.classList.add("image-caption");
+            caption.style.fontSize = "14px";
+            caption.style.marginTop = "5px";
+            caption.style.cursor = "text";
+            caption.style.color = "gray";
+            caption.innerHTML = `<input type="text" id="${uniqueId}" placeholder="이미지 설명을 입력하세요...">`;
+
+            caption.style.display = "none";
+
+            const selectButton = document.createElement("button");
+            selectButton.contentEditable = "false";
+            selectButton.innerText = "대표사진 선택";
+            selectButton.style.position = "absolute";
+            selectButton.style.bottom = "30px";
+            selectButton.style.left = "50%";
+            selectButton.style.transform = "translateX(-50%)";
+            selectButton.style.padding = "5px 10px";
+            selectButton.style.fontSize = "12px";
+            selectButton.style.border = "none";
+            selectButton.style.borderRadius = "5px";
+            selectButton.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+            selectButton.style.color = "white";
+            selectButton.style.cursor = "pointer";
+            selectButton.style.display = "none"; // 기본적으로 숨김
+            selectButton.style.userSelect = "none";
+
+            // 이미지에 마우스를 올리면 버튼 표시
+            figure.addEventListener("mouseenter", function () {
+              selectButton.style.display = "block";
+              caption.style.display = "block";
+            });
+
+            // 이미지에서 마우스가 벗어나면 버튼 숨김
+            figure.addEventListener("mouseleave", function () {
+              selectButton.style.display = "none";
+              let cap_input = document.getElementById("caption_input");
+              if (cap_input.value == "") {
+                caption.style.display = "none";
+              } else {
+                caption.style.display = "display";
+              }
+            });
+
+            // 버튼 클릭 시 대표사진으로 선택
+            selectButton.addEventListener("click", function (event) {
+              event.stopPropagation(); // 부모 figure의 클릭 이벤트 방지
+
+              // 기존 대표사진 스타일 해제
+              if (selectedImage) {
+                selectedImage.style.outline = "none";
+                selectedImage.dataset.isRepresentative = "false"; // 기존 대표사진 false 처리
+              }
+
+              // 새로운 대표사진 지정
+              selectedImage = img;
+              img.style.outline = "4px solid #861f1c"; // 대표사진 윤곽선 표시
+              img.dataset.isRepresentative = "true"; // 데이터 속성으로 저장
+            });
+
+            const newLine = document.createElement("div");
+            newLine.innerHTML = "<br>"; // 새로운 줄 추가
+
+            figure.appendChild(img);
+            figure.appendChild(selectButton);
+            figure.appendChild(caption);
+
+            insertAtCursor(figure);
+          };
+          reader.readAsDataURL(file);
+        }
+
+        function insertAtCursor(element) {
+          const contentField = document.getElementById("contentField");
+          contentField.focus();
+
+          const selection = window.getSelection();
+          if (!selection.rangeCount) {
+            contentField.appendChild(element);
+            return;
+          }
+
+          const range = selection.getRangeAt(0);
+          range.deleteContents();
+          range.insertNode(element);
+
+          range.setStartAfter(element);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+
+        document
+          .getElementById("imageInput")
+          .addEventListener("change", insertImage);
+      });
+
+      function openEditSavePopup() {
+        const postId = new URLSearchParams(window.location.search).get("id");
+        if (!postId) {
+          alert("게시물 ID를 찾을 수 없습니다.");
+          return;
+        }
+        window.open(
+          `edit_save.html?id=${postId}`,
+          "EditSavePopup",
+          "width=600,height=700"
+        );
+      }
+
+      async function deletePost() {
+        const postId = new URLSearchParams(window.location.search).get("id"); // URL에서 id 가져오기
+        const accessToken = localStorage.getItem("access_token");
+
+        if (!postId) {
+          alert("잘못된 접근입니다.");
+          return;
+        }
+
+        // ✅ 사용자 확인
+        if (
+          !confirm(
+            "정말로 게시물을 삭제하시겠습니까? 임시 저장 게시물도 이 버튼을 통해 삭제됩니다. 삭제 후에는 복구할 수 없습니다."
+          )
+        ) {
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/posts/me/${postId}/manage/`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            alert("✅ 게시물이 성공적으로 삭제되었습니다.");
+            window.location.href = "/myblog.html"; // 삭제 후 목록 페이지로 이동
+          } else if (response.status === 403) {
+            alert("🚨 삭제 권한이 없습니다.");
+          } else if (response.status === 404) {
+            alert("❌ 해당 게시물을 찾을 수 없습니다.");
+          } else {
+            throw new Error("서버 오류 발생");
+          }
+        } catch (error) {
+          console.error("🚨 게시물 삭제 실패:", error);
+          alert("게시물을 삭제하는 중 오류가 발생했습니다.");
+        }
+      }
+
+      // ✅ 이미지 삽입 시 `caption_input`의 값 추출
+      function extractCaptions() {
+        const captions = [];
+        document.querySelectorAll(".image-caption input").forEach((input) => {
+          captions.push(input.value.trim() || "");
+        });
+        return captions;
+      }
+
+      // 🔥 FormData에 추가
+      // Base64 데이터를 File 객체로 변환하는 함수
+      function dataURLToFile(dataUrl, filename) {
+        const arr = dataUrl.split(",");
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+
+        return new File([u8arr], filename, { type: mime });
+      }
+
+      // ✅ Base64로 저장된 본문 내 이미지들을 찾아서 File 객체로 변환
+      // ✅ Base64로 저장된 본문 내 이미지들을 찾아서 File 객체로 변환하고, 대표사진 여부까지 처리
+      function extractBase64Images() {
+        const images = [];
+        const isRepresentativeArray = [];
+
+        document.querySelectorAll(".editable-image").forEach((img, index) => {
+          if (img.src.startsWith("data:image")) {
+            const file = dataURLToFile(img.src, `image_${index}.png`);
+            images.push(file);
+
+            // ✅ 대표사진 여부 저장
+            isRepresentativeArray.push(img.dataset.isRepresentative === "true");
+          }
+        });
+
+        // ✅ 대표사진이 없으면 첫 번째 이미지를 대표사진으로 설정
+        if (!isRepresentativeArray.includes(true) && images.length > 0) {
+          isRepresentativeArray[0] = true;
+        }
+
+        return { images, isRepresentativeArray };
+      }
+
+      // ✅ 부모 창에서 자식 창 메시지 수신
+
+      window.addEventListener("message", async function (event) {
+        if (event.data.type === "SAVE_DATA") {
+          await handlePublish(event.data.payload);
+        } else if (event.data.type === "EDIT_SAVE_DATA") {
+          await handleEdit(event.data.payload);
+        } else if (event.data.type === "TEMP_SAVE_DATA") {
+          await handleTempSave(event.data.payload);
+        } else {
+          console.log("⚠️ 알 수 없는 메시지 수신:", event.data);
+        }
+      });
+
+      async function handleEdit(eventData) {
+        console.log("🚀 [부모 창] 수정된 데이터 수신 완료:", eventData);
+
+        const title = document.getElementById("titleField").textContent.trim();
+        const contentHTML = document.getElementById("contentField").innerHTML;
+        const captionsArray = extractCaptions();
+        const { images, isRepresentativeArray } = extractBase64Images();
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", contentHTML);
+        formData.append("category_name", eventData.category);
+        formData.append("subject", eventData.subject);
+        formData.append("visibility", eventData.open);
+        formData.append("status", "published");
+        formData.append("captions", JSON.stringify(captionsArray));
+        formData.append(
+          "is_representative",
+          JSON.stringify(isRepresentativeArray)
+        );
+
+        const accessToken = localStorage.getItem("access_token");
+        const postId = new URLSearchParams(window.location.search).get("id");
+
+        if (!postId) {
+          console.error("🚨 postId가 없습니다!");
+          return;
+        }
+
+        console.log(`📌 PATCH 요청 실행: /posts/manage/${postId}/`);
+        console.log("▶ 전송 데이터:", formData);
+
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/posts/me/${postId}/manage/`,
+            {
+              method: "PATCH",
+              headers: { Authorization: `Bearer ${accessToken}` },
+              body: formData,
+            }
+          );
+
+          if (response.ok) {
+            alert("✅ 게시물이 성공적으로 수정되었습니다!");
+            window.location.href = "/myblog.html";
+          } else {
+            console.error("⚠️ 게시물 수정 실패:", await response.text());
+            alert("⚠️ 게시물 수정 실패");
+          }
+        } catch (error) {
+          console.error("❌ 게시물 수정 중 오류:", error);
+        }
+      }
+
+      /*
+      async function handlePublish(eventData) {
+        if (event.data.type === "SAVE_DATA") {
+          console.log("🚀 [부모 창] 자식 창으로부터 데이터 수신 성공!");
+          console.log("📦 전달된 데이터:", event.data.payload);
+
+          // 1. 제목과 본문, 사진 캡션, 대표사진 여부 추출
+          const title = document
+            .getElementById("titleField")
+            .textContent.trim();
+          const contentHTML = document.getElementById("contentField").innerHTML;
+          const captionsArray = extractCaptions();
+
+          const { images, isRepresentativeArray } = extractBase64Images();
+
+          if (captionsArray.length !== images.length) {
+            console.error("🚨 captions 배열과 images 배열 개수가 다릅니다!");
+            console.log("▶ captions:", captionsArray);
+            console.log("▶ images:", images);
+          }
+
+          // 2. FormData 생성
+          const formData = new FormData();
+          formData.append("title", title);
+          formData.append("content", contentHTML);
+          formData.append("category_name", event.data.payload.category);
+          formData.append("subject", event.data.payload.subject);
+          formData.append("visibility", event.data.payload.open);
+          formData.append("status", "published");
+          formData.append("captions", JSON.stringify(captionsArray));
+          formData.append(
+            "is_representative",
+            JSON.stringify(isRepresentativeArray)
+          );
+
+          // ✅ Base64를 변환한 이미지들을 FormData에 추가
+          images.forEach((image, index) => {
+            formData.append(`images`, image);
+          });
+
+          const accessToken = localStorage.getItem("access_token");
+
+          // 3. 백엔드 전송
+          console.log("📌 FormData 확인");
+          console.log("▶ 제목:", formData.get("title"));
+          console.log("▶ 본문:", formData.get("content"));
+          console.log("▶ 카테고리:", formData.get("category_name"));
+          console.log("▶ 주제:", formData.get("subject"));
+          console.log("▶ 공개 설정:", formData.get("visibility"));
+          console.log("▶ 상태:", formData.get("status"));
+          console.log("▶ 캡션 리스트:", formData.get("captions"));
+          console.log("▶ 대표사진 여부:", formData.get("is_representative"));
+
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:8000/posts/me/create/",
+              {
+                method: "POST",
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: formData,
+              }
+            );
+
+            if (response.ok) {
+              alert("✅ 게시물이 성공적으로 등록되었습니다!");
+              window.location.href = "/myblog.html";
+            } else {
+              alert("⚠️ 게시물 등록 실패");
+            }
+          } catch (error) {
+            console.error("❌ 게시물 전송 중 오류:", error);
+            alert("서버와 연결할 수 없습니다.");
+          }
+        } else {
+          console.log("⚠️ 알 수 없는 메시지 수신:", event.data);
+        }
+      }  
+      */
+
+      async function handleTempSave(eventData) {
+        if (event.data.type === "TEMP_SAVE_DATA") {
+          console.log("🚀 [부모 창] 자식 창으로부터 데이터 수신 성공!");
+          console.log("📦 전달된 데이터:", event.data.payload);
+
+          // 1. 제목과 본문, 사진 캡션, 대표사진 여부 추출
+          const title = document
+            .getElementById("titleField")
+            .textContent.trim();
+          const contentHTML = document.getElementById("contentField").innerHTML;
+          const captionsArray = extractCaptions();
+
+          const { images, isRepresentativeArray } = extractBase64Images();
+
+          if (captionsArray.length !== images.length) {
+            console.error("🚨 captions 배열과 images 배열 개수가 다릅니다!");
+            console.log("▶ captions:", captionsArray);
+            console.log("▶ images:", images);
+          }
+
+          // 2. FormData 생성
+          const formData = new FormData();
+          formData.append("title", title);
+          formData.append("content", contentHTML);
+          formData.append("category_name", event.data.payload.category);
+          formData.append("subject", event.data.payload.subject);
+          formData.append("visibility", event.data.payload.open);
+          formData.append("status", "draft");
+          formData.append("captions", JSON.stringify(captionsArray));
+          formData.append(
+            "is_representative",
+            JSON.stringify(isRepresentativeArray)
+          );
+
+          const accessToken = localStorage.getItem("access_token");
+
+          // 3. 백엔드 전송
+          console.log("📌 FormData 확인");
+          console.log("▶ 제목:", formData.get("title"));
+          console.log("▶ 본문:", formData.get("content"));
+          console.log("▶ 카테고리:", formData.get("category_name"));
+          console.log("▶ 주제:", formData.get("subject"));
+          console.log("▶ 공개 설정:", formData.get("visibility"));
+          console.log("▶ 상태:", formData.get("status"));
+          console.log("▶ 캡션 리스트:", formData.get("captions"));
+          console.log("▶ 대표사진 여부:", formData.get("is_representative"));
+
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:8000/posts/me/create/",
+              {
+                method: "POST",
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: formData,
+              }
+            );
+
+            if (response.ok) {
+              alert("✅ 게시물이 성공적으로 임시 저장되었습니다!");
+              window.location.href = "/myblog.html";
+            } else {
+              alert("⚠️ 게시물 임시저장 실패");
+            }
+          } catch (error) {
+            console.error("❌ 게시물 전송 중 오류:", error);
+            alert("서버와 연결할 수 없습니다.");
+          }
+        } else {
+          console.log("⚠️ 알 수 없는 메시지 수신:", event.data);
+        }
+      }
+    </script>
+  </body>
+</html>

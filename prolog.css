@@ -1,0 +1,451 @@
+.top_menubar {
+    width: 300px;
+    font-size: 12px;
+    position: absolute;
+    margin-top: 80px;
+  
+    margin-left: 1290px;
+  }
+  
+  .login_btn {
+    background-color: white;
+    border: 0.5px solid gray;
+    padding: 1px;
+    color: black;
+    text-decoration-line: none;
+  }
+  
+  .itemtitlefont {
+    font-style: normal;
+    font-weight: bold;
+    font-size: large;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 160px;
+  }
+  
+  #bloghome-link {
+    position: relative; /* 다른 요소에 가려지지 않도록 */
+    z-index: 1000 !important; /* 클릭 우선 순위 증가 */
+    pointer-events: auto !important; /* 클릭 이벤트 활성화 */
+  }
+  
+  #login-btn {
+    position: relative; /* 다른 요소에 가려지지 않도록 */
+    z-index: 1000 !important; /* 클릭 우선 순위 증가 */
+    pointer-events: auto !important; /* 클릭 이벤트 활성화 */
+    cursor: pointer;
+  }
+  
+  hr {
+    border: 2px solid #da9d9c;
+    width: 1250px;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  li {
+    list-style: none;
+    display: inline-block;
+  }
+  
+  .border {
+    position: relative;
+    margin-left: 120px;
+  }
+  
+  .menu1 {
+    font-size: 14px;
+  }
+  
+  .p_title_t {
+    font-weight: normal;
+    color: #861f1c;
+    font-size: 18px;
+  }
+  
+  .num_comments {
+    font-weight: normal;
+    color: gray;
+    font-size: 15px;
+  }
+  
+  .pcol_contents {
+    font-size: 13px;
+    color: gray;
+    font-weight: lighter;
+  }
+  
+  .p_date {
+    font-size: 13px;
+    color: gainsboro;
+    font-weight: lighter;
+  }
+  
+  .pro_sy1 {
+    width: 250px;
+    float: left;
+    position: relative;
+    left: 390px;
+  }
+  
+  .pro_sy2 {
+    width: 300px;
+    position: absolute;
+    left: 900px;
+    display: inline-block;
+    margin-left: 30px;
+  }
+  
+  .bg-body {
+    position: absolute;
+    left: 145px;
+    border: 0.3px solid #da9d9c;
+    padding: 15px;
+  }
+  
+  .p_img {
+    position: relative;
+    left: 50px;
+  }
+  
+  .p_img2 {
+    position: absolute;
+    left: 330px;
+  }
+  
+  .bg-category {
+    position: absolute;
+    left: 145px;
+    top: 550px;
+    padding: 15px;
+    font-size: 14px;
+  }
+  
+  .category-list div {
+    padding-top: 5px;
+  }
+  
+  .itemfont_col {
+    font-size: 13px;
+    color: gray;
+    font-weight: lighter;
+  }
+  
+  .col_sub {
+    font-size: 11px;
+    color: gray;
+    font-weight: lighter;
+  }
+  
+  .btn_area {
+    background-color: white;
+    border: 0.5px solid gray;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .post_list {
+    background-color: white;
+    border: 0.5px solid gray;
+    position: relative;
+    left: 350px;
+    width: 1030px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  
+  .post_list_title {
+    padding: 20px;
+    font-size: 13px;
+  }
+  
+  .list_open {
+    float: right;
+  }
+  
+  .post_content {
+    background-color: white;
+    border: 0.5px solid gray;
+    position: relative;
+    left: 350px;
+    width: 1030px;
+    margin-bottom: 10px;
+  }
+  
+  .post_title_content {
+    padding: 30px;
+  }
+  
+  .post_category {
+    font-size: 15px;
+    color: gray;
+    font-weight: normal;
+  }
+  
+  .post_title {
+    font-size: 30px;
+    color: #861f1c;
+    font-weight: normal;
+    padding-top: 20px;
+  }
+  
+  .post_writer_list {
+    padding-top: 20px;
+    font-size: 15px;
+    color: gray;
+  }
+  
+  .neighbor_insert {
+    border: 0.5px solid black;
+    padding: 3px;
+    color: black;
+    float: right;
+  }
+  
+  .post_hr {
+    margin-top: 20px;
+    border: 0.5px solid #e2e2e2;
+    width: 960px;
+  }
+  
+  .post_contents {
+    padding: 30px;
+    padding-top: 5px;
+  }
+  
+  .heart_list {
+    margin-left: 30px;
+    padding: 5px;
+    background-color: white;
+    border: 0.5px solid gray;
+  }
+  
+  .comment_list {
+    margin-left: 5px;
+    padding: 5px;
+    background-color: white;
+    border: 0.5px solid gray;
+  }
+  
+  .post_last_list {
+    padding-bottom: 15px;
+  }
+  
+  .post_list_hr {
+    border: 0.2px solid #bcbcbc;
+    width: 970px;
+  }
+  
+  .post_list_content_title {
+    font-size: 12px;
+    color: gray;
+    font-weight: normal;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  
+  .post_list_contents_list {
+    margin-left: 30px;
+    color: #666666;
+    font-size: 13px;
+    margin-right: 30px;
+  }
+  
+  .post_list_contents_hr {
+    border: 0.2px solid #e2e2e2;
+    width: 970px;
+    position: relative;
+    margin-left: 0px;
+  }
+  
+  .post_list_page {
+    text-align: center;
+  }
+  
+  .pagination {
+    list-style: none;
+    display: inline-block;
+    margin-top: 20px;
+  }
+  
+  .pagination li {
+    display: inline;
+    text-align: center;
+  }
+  
+  .pagination a {
+    float: left;
+    display: block;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 2px 12px;
+    color: #666666;
+    list-style: 1.5;
+  }
+  
+  .left:hover,
+  .right:hover {
+    text-decoration: underline;
+  }
+  
+  .num:hover {
+    background-color: #e2e2e2;
+    border: 0.5px solid #666666;
+  }
+  
+  .list_page {
+    text-align: center;
+    border: 0.5px solid gray;
+    position: relative;
+    left: 350px;
+    width: 1030px;
+    margin-bottom: 500px;
+  }
+  
+  .comments {
+    background-color: #f7f2d5;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-bottom: 60px;
+  }
+  
+  .comment_write {
+    padding-top: 10px;
+    background-color: white;
+    border: 0.5px solid #666666;
+    position: relative;
+    margin: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .writed_comments {
+    position: relative;
+    margin: 10px;
+  }
+  
+  .another_cmts {
+    border: solid 0.5px gray;
+    padding: 1px;
+  }
+  
+  .writing_comment {
+    font-size: 13px;
+    color: gray;
+    margin: 10px;
+    margin-bottom: 0px;
+  }
+  
+  .writing_comment_input {
+    width: 100%;
+    height: 100px;
+    border: 0px;
+  }
+  
+  .comment_hr {
+    border: 0.2px solid #e2e2e2;
+    width: 100%;
+    position: relative;
+    margin-left: 0px;
+  }
+  
+  .comment_btns {
+    color: gray;
+    font-size: 13px;
+    margin: 10px;
+  }
+  
+  .comment_btns a {
+    margin: 0px 5px;
+  }
+  
+  .submit_cmt {
+    float: right;
+    color: black;
+    font-weight: bolder;
+  }
+  
+  .cmt_writer_nickname {
+    font-size: 14px;
+    margin: 10px;
+  }
+  
+  .bg-neighbor {
+    width: 190px;
+    background-color: #eeeeee;
+    border: 0.5px solid gray;
+    position: absolute;
+    margin-left: 138px;
+    margin-top: 540px;
+    padding-bottom: 15px;
+  }
+  
+  .neighbor-profile {
+    margin: 15px;
+    font-size: 13px;
+  }
+  
+  .find_neighbor {
+    background-color: #eeeeee;
+    border: 0.25px solid gray;
+    padding: 3.8px;
+  }
+  
+  .all_neighborhood {
+    margin: 10px;
+    font-size: 13px;
+  }
+  
+  #neighbor-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 5px !important;
+    padding: 5px !important;
+  }
+  
+  .neighbor-item {
+    text-align: center !important;
+    width: 50px !important;
+  }
+  
+  .neighbor-img {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 5px !important;
+    border: 1px solid gray !important;
+    overflow: hidden !important;
+  }
+  
+  .neighbor-img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  
+  .neighbor-nickname {
+    display: block !important;
+    font-size: 10px !important;
+    margin-top: 3px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  /* ✅ 카테고리 리스트 스타일 */
+  #categoryList {
+    list-style-type: none; /* 리스트 스타일 제거 */
+    padding: 0;
+    margin: 0;
+}
+
+/* ✅ 카테고리를 한 줄씩 출력 (심플한 디자인) */
+.category-item {
+    display: block; /* ✅ 한 줄씩 출력 */
+    margin-bottom: 5px; /* ✅ 줄 간격 추가 */
+    font-size: 16px; /* ✅ 글씨 크기 조정 */
+    color: black; /* ✅ 기본 글씨 색상 */
+}

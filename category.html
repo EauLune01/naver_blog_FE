@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Noto+Serif+KR&family=Gaegu&family=Nanum+Pen+Script&family=Black+And+White+Picture&display=swap" rel="stylesheet">
+    <style>
+        /* 기본 스타일 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background-color: #da9d9c;
+            padding: 15px 25px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .header .menu {
+            display: flex;
+            gap: 10px;
+            font-size:15px;
+            font-weight:500;
+        }
+
+        .header .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .header .menu a:hover {
+            background-color: #861f1c;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 1px;
+            padding: 15px;
+        }
+
+        .sidebar {
+            width: 230px;
+            background-color: white;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 13px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            padding: 10px 0;
+            font-size: 14px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .sidebar ul li:hover {
+            color: #861f1c;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+            padding: 25px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h2 {
+            font-size: 22px;
+            margin-bottom: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 80%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top:6px;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: none;
+        }
+
+        .form-group button {
+            background-color: #da9d9c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom:25px;
+        }
+
+        .form-group button:hover {
+            background-color: #861f1c;
+        }
+
+        /* 이미지 미리보기 스타일 */
+        .image-preview {
+            margin-top: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            display: none;
+            object-fit: cover;
+        }
+
+        /* 수정 완료 버튼 */
+        .save-button {
+            width: 80%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .save-button button {
+            background-color: #da9d9c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        .save-button button:hover {
+            background-color: #861f1c;
+        }
+
+        /* 저장 완료 메시지 */
+        .success-message {
+            display: none;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .category-list { list-style: none; padding: 0; }
+        .category-list li { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; }
+        .category-list button { margin-left: 5px; background-color: #da9d9c; color: white; border: none; padding: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>SG Blog 관리</div>
+        <div class="menu">
+            <a href="main_login.html">블로그 홈</a>
+            <a href="myprolog.html">내 블로그</a>
+            <a href="main_login.html">이웃블로그</a>
+            <a href="main.html">로그아웃</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>기본 설정</h3>
+            <ul>
+                <a style="text-decoration-line: none;" id="profileLink"><li>프로필 관리</li></a>
+                <a style="text-decoration-line: none;" href="./neighborhood.html"><li>이웃 관리</li></a>
+                <a style="text-decoration-line: none;" href="./category.html" style="color:#861f1c"><li>카테고리 관리</li></a>
+                <a style="text-decoration-line: none;" href="./password_update.html"><li>비밀번호 변경</li></a>
+            </ul>   
+        </aside>
+        <section class="content">
+            <h2>카테고리 관리</h2>
+            <div class="form-group">
+                <input type="text" id="categoryInput" placeholder="새 카테고리 입력">
+                <button onclick="addCategory()">추가</button>
+            </div>
+            <ul id="categoryList" class="category-list"></ul>
+        </section>
+    </div>
+    <script>
+        let loggedInUserUrlname = null; // 로그인한 사용자의 URLname 저장
+        
+        // ✅ 서버에서 로그인한 사용자 URLname 가져오기
+        async function getUserUrlname() {
+            const accessToken = localStorage.getItem("access_token");
+        
+            if (!accessToken) {
+                console.error("❌ 토큰이 없습니다. 로그인 필요.");
+                return;
+            }
+        
+            try {
+                const response = await fetch("http://127.0.0.1:8000/profile/me/", {  // ✅ /profile/me로 변경
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+        
+                if (!response.ok) {
+                    console.error("❌ 사용자 정보를 가져오는 데 실패했습니다. 상태 코드:", response.status);
+                    return;
+                }
+        
+                const data = await response.json();
+                loggedInUserUrlname = data.urlname || null;
+        
+                console.log("✅ 로그인한 사용자 URLname:", loggedInUserUrlname);
+            } catch (error) {
+                console.error("❌ 사용자 정보 요청 중 오류 발생:", error);
+            }
+        }
+        
+        // ✅ 프로필 관리 버튼 클릭 시 URLname 포함한 페이지로 이동
+        async function redirectToProfile(event) {
+            event.preventDefault(); // 기본 링크 이동 방지
+        
+            if (!loggedInUserUrlname) {
+                await getUserUrlname(); // URLname을 가져올 때까지 기다림
+            }
+        
+            if (loggedInUserUrlname) {
+                const profileUrl = `profile.html?urlname=${encodeURIComponent(loggedInUserUrlname)}`;
+                console.log("🔗 이동할 URL:", profileUrl);
+                window.location.href = profileUrl;
+            } else {
+                alert("❌ 로그인한 사용자의 URL을 가져올 수 없습니다.");
+            }
+        }
+        
+        // ✅ 페이지 로딩 후 실행
+        document.addEventListener("DOMContentLoaded", async function () {
+            await getUserUrlname(); // 로그인된 사용자 URLname 가져오기
+        
+            // ✅ 프로필 관리 버튼 클릭 시 리디렉션 설정
+            const profileLink = document.getElementById("profileLink");
+            if (profileLink) {
+                profileLink.addEventListener("click", redirectToProfile);
+            }
+        });
+        </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!checkLoginStatus()) {
+                alert("로그인되지 않았습니다. 로그인 후 다시 시도해주세요.");
+                window.location.href = 'login.html'; // 로그인 페이지로 리다이렉트
+                return; // 로그인되지 않은 경우 이후 코드를 실행하지 않음
+            }
+    
+            fetchCategories(); // 로그인된 경우에만 실행
+        });
+    
+        // 로그인 상태 확인 함수
+        function checkLoginStatus() {
+            const accessToken = localStorage.getItem('access_token');  // 로컬 스토리지에서 `access_token` 가져오기
+            return accessToken ? true : false; // access_token이 있으면 로그인된 것으로 간주
+        }
+    
+        // 카테고리 목록을 가져오는 함수
+        async function fetchCategories() {
+            try {
+                const accessToken = localStorage.getItem('access_token');  // 로그인한 토큰을 가져와서 사용
+                if (!accessToken) {
+                    alert("로그인 상태가 아닙니다.");
+                    window.location.href = "login.html"; // 로그인 페이지로 리다이렉트
+                    return;
+                }
+    
+                const response = await fetch("http://127.0.0.1:8000/category/me", {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,  // 헤더에 `Authorization` 추가
+                        "Content-Type": "application/json"
+                    }
+                });
+    
+                const data = await response.json();
+    
+                // 데이터가 배열이면 그대로 처리
+                if (Array.isArray(data)) {
+                    categories = data.map(cat => cat.name);  // 서버에서 받은 카테고리 이름들만 추출
+                } else {
+                    console.error("⚠️ 예상치 못한 데이터 형식:", data);
+                    return;
+                }
+    
+                renderCategories();  // 카테고리 렌더링
+            } catch (error) {
+                console.error("카테고리 불러오기 오류:", error);
+            }
+        }
+    
+        // ✅ 카테고리 목록을 렌더링
+        function renderCategories() {
+            const list = document.getElementById("categoryList");
+            list.innerHTML = ""; // 기존 목록 초기화
+    
+            categories.forEach((category, index) => {
+                const li = document.createElement("li");
+    
+                const input = document.createElement("input");
+                input.type = "text";
+                input.value = category;
+                if (category === "게시판") {
+                    input.readOnly = true; // 기본 카테고리 수정 불가
+                } else {
+                    input.onchange = () => updateCategory(index, input.value);
+                }
+    
+                const deleteButton = document.createElement("button");
+                deleteButton.innerText = "삭제";
+                if (category !== "게시판") {
+                    deleteButton.onclick = () => deleteCategory(index);
+                } else {
+                    deleteButton.disabled = true; // 기본 카테고리는 삭제 불가
+                }
+    
+                li.appendChild(input);
+                li.appendChild(deleteButton);
+                list.appendChild(li);
+            });
+        }
+    
+        // ✅ 새로운 카테고리 추가 (POST 요청)
+        async function addCategory() {
+            const input = document.getElementById("categoryInput");
+            const newCategory = input.value.trim();
+            const errorMessage = document.getElementById("error-message");
+    
+            if (!newCategory) {
+                errorMessage.textContent = "카테고리 이름을 입력해주세요.";
+                errorMessage.style.display = "block";
+                return;
+            }
+    
+            try {
+                const accessToken = localStorage.getItem('access_token');
+                const response = await fetch("http://127.0.0.1:8000/category/me", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name: newCategory })
+                });
+    
+                if (response.ok) {
+                    input.value = "";
+                    fetchCategories(); // 새로고침하여 카테고리 목록 다시 불러오기
+                } else {
+                    const result = await response.json();
+                    errorMessage.textContent = result.error || "카테고리 추가 실패";
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                console.error("카테고리 추가 중 오류:", error);
+                errorMessage.textContent = "카테고리 추가 중 오류 발생";
+                errorMessage.style.display = "block";
+            }
+        }
+    
+        // 카테고리 수정 (PATCH 요청)
+        async function updateCategory(index, newValue) {
+            if (!newValue.trim()) {
+                console.error("카테고리 이름이 비어있습니다.");
+                return;
+            }
+    
+            try {
+                const categoryId = await getCategoryId(categories[index]); // 기존 카테고리 ID 가져오기
+                if (!categoryId) {
+                    console.error("유효하지 않은 카테고리 ID입니다.");
+                    return;  // categoryId가 유효하지 않으면 함수 종료
+                }
+    
+                const accessToken = localStorage.getItem('access_token');
+                if (!accessToken) {
+                    console.error("로그인되지 않았습니다. access_token이 없습니다.");
+                    return;  // access_token이 없으면 함수 종료
+                }
+    
+                const response = await fetch(`http://127.0.0.1:8000/category/me/${categoryId}/`, {
+                    method: "PATCH",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,  // Authorization 헤더에 Bearer token 추가
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name: newValue })
+                });
+    
+                if (response.ok) {
+                    fetchCategories();  // 수정 후 카테고리 목록 다시 불러오기
+                } else {
+                    const result = await response.json();
+                    console.error("카테고리 수정 실패:", result);
+                    alert(result.error || "카테고리 수정 중 문제가 발생했습니다.");
+                }
+            } catch (error) {
+                console.error("카테고리 수정 중 오류:", error);
+            }
+        }
+    
+        // 카테고리 삭제 (DELETE 요청)
+        async function deleteCategory(index) {
+            try {
+                const categoryId = await getCategoryId(categories[index]); // 기존 카테고리 ID 가져오기
+                if (!categoryId) {
+                    console.error("유효하지 않은 카테고리 ID입니다.");
+                    return;  // categoryId가 유효하지 않으면 함수 종료
+                }
+    
+                const accessToken = localStorage.getItem('access_token');
+                if (!accessToken) {
+                    console.error("로그인되지 않았습니다. access_token이 없습니다.");
+                    return;  // access_token이 없으면 함수 종료
+                }
+    
+                const response = await fetch(`http://127.0.0.1:8000/category/me/${categoryId}/`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}` // Authorization 헤더에 Bearer token 추가
+                    }
+                });
+    
+                if (response.ok) {
+                    fetchCategories(); // 삭제 후 카테고리 목록 다시 불러오기
+                } else {
+                    const result = await response.json();
+                    console.error("카테고리 삭제 실패:", result);
+                    alert(result.error || "카테고리 삭제 중 문제가 발생했습니다.");
+                }
+            } catch (error) {
+                console.error("카테고리 삭제 중 오류:", error);
+            }
+        }
+    
+        // 카테고리 ID 조회 함수
+        async function getCategoryId(categoryName) {
+            try {
+                const accessToken = localStorage.getItem('access_token');
+                if (!accessToken) {
+                    console.error("access_token이 없습니다.");
+                    return null;
+                }
+    
+                const response = await fetch("http://127.0.0.1:8000/category/me", {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = await response.json();
+    
+                // 응답 데이터가 배열인지 확인
+                if (Array.isArray(data)) {
+                    const category = data.find(cat => cat.name === categoryName);
+                    return category ? category.id : null;
+                } else {
+                    console.error("서버 응답이 배열이 아닙니다.", data);
+                    return null;
+                }
+            } catch (error) {
+                console.error("카테고리 ID 조회 오류:", error);
+                return null;
+            }
+        }
+    </script>           
+</body>
+</html>

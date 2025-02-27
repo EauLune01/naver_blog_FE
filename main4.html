@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG Blog</title>
+    <style>
+
+        html, body {
+            min-width:1280px;
+            overflow-y:auto;
+            overflow-x: auto;
+        }
+
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        
+/*헤더 부분*/        
+.header {
+            display: flex;
+            justify-content: space-between; /* 좌우로 균등 배치 */
+            align-items: center; /* 세로 중앙 정렬 */
+            padding: 5px 17%; /* 좌우 패딩 설정 */
+            background-color: #f1d1d3;
+            color: white;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .header .logo {
+            height: 49px; /* 고정된 로고 크기 */
+            width: auto; /* 비율 유지 */
+            margin: 1px; /* margin (이미지를 둘러싸는 여백의 폭) 제거 */
+            transition: margin-left 0.3s ease;
+            font-size:27px;
+            font-weight:800;
+
+        }
+
+        .header .search {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .header .search input {
+            width: 60%; /* 검색창 너비 */
+            padding: 12px;
+            border: none;
+            border-radius: 0px;
+            margin-right: 300px;
+            border-color: #f1d1d3;
+
+        }
+
+        .header .search button { /*윗줄 검색 버튼*/
+            padding: 11px 13px;
+            border: none;
+            background-color: #da9d9c;
+            border-color: #da9d9c;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left:-193px;
+        }
+
+        
+        .header .search button:hover {
+            background-color: #861f1c;
+        }
+
+        .header .menu {
+            display: flex;
+        }
+
+
+        .header .menu button {
+            background-color: #da9d9c;
+            color: #fff;
+            border: none;
+            padding: 11px 16px;
+            border-radius:2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header .menu button:hover {
+            background-color: #861f1c;
+        }
+        
+        
+
+
+        .search select {
+            width:100%;
+            padding:11.8px;
+            border: 0.05px solid;
+            border-color: #da9d9c;
+            margin-right:20px;
+        }
+        
+        
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        
+
+
+
+
+/*오른쪽 로그인 박스부분*/
+        .right-column {
+            width: 350px; /* 로그인 박스 너비 */
+            height:180px;
+            background-color: #fff;
+            padding: 27px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .login-text {
+            font-size: 14px;
+            color: gray;
+            text-align: center;
+        }
+
+        .naver-login-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #da9d9c;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .naver-login-btn:hover {
+            background-color: #861f1c;
+        }
+
+        .login-links {
+            font-size: 12.5px;
+            color: #666;
+        }
+
+        .login-links a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+
+
+
+/*왼쪽 부분*/
+        .left-column {
+            width: 80%;
+            padding: 20px;
+        }
+
+/* 로그아웃 메시지 스타일 */
+        .logout-message {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logout-message p {
+            font-size: 18px;
+            color: #666;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+/* 카테고리 네비게이션 */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .category-nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+            border-bottom: 2.5px solid #ddd;
+            border-top: 2.5px solid #ddd;
+        }
+
+        .category-nav li {
+            margin-right: 30px;
+        }
+
+        .category-nav a {
+            display: block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .category-nav a:hover, 
+        .category-nav a.active {
+            color: #861f1c;
+            font-weight: bold;
+            border-bottom: 3px solid #861f1c;
+        }
+
+/* 글 목록 스타일 */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+/* 개별 글 */
+        .post {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+/* 작성자 정보 */
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .post-author img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .author-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .time {
+            font-size: 12px;
+            color: gray;
+            margin-top:6px;
+        }
+
+/* 글 내용 */
+        .post-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-text {
+            flex: 1;
+        }
+
+        .post-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .post-text p {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: gray;
+            margin-top:13px;
+        }
+
+        .post-content img {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <!-- 로고 -->
+        <div class="logo">SG blog</div>
+        
+        <!-- 검색 영역 -->
+        <div class="search">
+            <div class="search-select">
+                <label for="search-type" class="visually-hidden"></label>
+                <select id="search-type" name="type">
+                    <option value="geul">글</option>
+                    <option value="blog">블로그</option>
+                    <option value="id">별명, 아이디</option>
+                </select>
+            </div>
+
+            <div class="search-input">
+                <label for="search-input" class="visually-hidden"></label>
+                <input id="search-input" type="text" placeholder="검색어를 입력하세요">
+            </div>
+
+            <button class="search-button">검색</button>
+        </div>
+
+        <!-- 메뉴 버튼 -->
+        <div class="menu">
+            <button  onclick="location.href='login.html'">로그인</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="left-column">
+            <!-- 로그아웃 메시지 -->
+            <div class="logout-message">
+                <p>로그아웃 상태입니다.</p>
+                <p>로그인하여 이웃새글을 확인해보세요.</p>
+            </div>
+        
+            <!-- 카테고리 네비게이션 -->
+            <nav class="category-nav">
+                <ul>
+                    <li><a href="main.html">전체</a></li>
+                    <li><a href="main1.html">엔터테인먼트/예술</a></li>
+                    <li><a href="main2.html">생활/노하우/쇼핑</a></li>
+                    <li><a href="main3.html">취미/여가/여행</a></li>
+                    <li><a href="main4.html" class="active">지식/동향</a></li>
+                </ul>
+            </nav>
+        
+            <!-- 전체 공개된 글 목록 -->
+            <div class="post-list">
+                <div class="post">
+                    <div class="post-author">
+                        <img src="assets/profile.png" alt="프로필">
+                        <div>
+                            <div class="author-name">ㅇㅇ</div>
+                            <div class="time">7시간 전</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-text">
+                            <h3>음악 카테고리 글1</h3>
+                            <p>안녕하세요!</p>
+                            <div class="post-meta">
+                                <span>공감 66</span> · <span>댓글 18</span>
+                            </div>
+                        </div>
+                        <img src="https://via.placeholder.com/120" alt="대표사진">
+                    </div>
+                </div>
+        
+                <div class="post">
+                    <div class="post-author">
+                        <img src="assets/profile.png" alt="프로필">
+                        <div>
+                            <div class="author-name">사용자</div>
+                            <div class="time">9시간 전</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-text">
+                            <h3>좋은 음악 공유합니다~</h3>
+                            <p>ㅇㅇㅇ</p>
+                            <div class="post-meta">
+                                <span>공감 49</span> · <span>댓글 3</span>
+                            </div>
+                        </div>
+                        <img src="https://via.placeholder.com/120" alt="대표사진">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+
+        <div class="right-column">
+            <div class="login-box">
+                <p class="login-text">네이버를 보다 편리하고 안전하게 이용하세요.</p>
+                <button class="naver-login-btn"  onclick="location.href='login.html'">NAVER 로그인</button>
+                <div class="login-links">
+                    <a href="#">아이디 찾기</a> · <a href="#">비밀번호 찾기</a> · <a href="signin.html">회원가입</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const postList = document.querySelector(".post-list"); // 게시글 리스트 컨테이너
+    const apiUrl = "http://127.0.0.1:8000/posts/?keyword=%EC%A7%80%EC%8B%9D%2F%EB%8F%99%ED%96%A5"; // 백엔드 엔드포인트
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${accessToken}`, // 토큰 전달
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("데이터를 불러오지 못했습니다.");
+        }
+
+        const posts = await response.json();
+        window.posts = posts; // ✅ 전역 변수 저장
+
+        postList.innerHTML = ""; // 기존 목록 비우기
+
+        if (posts.length === 0) {
+            postList.innerHTML = "<p>게시글이 없습니다.</p>";
+            return;
+        }
+
+        // ✅ `url_name`을 이용해 프로필 이미지(user_pic) 가져오기 (비동기 병렬 처리)
+        const profileImages = await fetchProfileImages(posts);
+
+        // ✅ 게시글을 동적으로 추가
+        posts.forEach(post => {
+            const { id, user_name, title, content, likes, comments, created_at, images, url_name } = post;
+
+            // ✅ 프로필 이미지 적용 (profile API에서 가져온 값 사용)
+            let profileImageUrl = profileImages[url_name] || `http://127.0.0.1:8000/media/default/user_default.jpg`;
+
+            // ✅ 본문 글자 수 제한 및 HTML 태그 제거
+            let previewText = content
+                .replace(/<[^>]*>/g, "") // 모든 HTML 태그 제거
+                .replace(/대표사진 선택/g, "")
+                .replace(/이미지 설명을 입력하세요\.\.\./g, "")
+                .trim();
+            previewText = previewText.length > 125 ? previewText.substring(0, 125) + "..." : previewText;
+
+            // ✅ 대표 이미지 가져오기
+            let representativeImage = "";
+            if (images && images.length > 0) {
+                const repImage = images.find(img => img.is_representative);
+                if (repImage) {
+                    representativeImage = `<div class="post-right"><img src="${repImage.image}" alt="대표 이미지" class="post-thumbnail"></div>`;
+                }
+            }
+
+            // ✅ 날짜 포맷 변경
+            let dateObj = new Date(created_at);
+            let formattedDate = `${dateObj.getFullYear()}. ${dateObj.getMonth() + 1}. ${dateObj.getDate()} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+
+            // ✅ 게시글 HTML 생성
+            const postElement = document.createElement("div");
+            postElement.classList.add("post");
+            postElement.dataset.id = id;
+            postElement.dataset.urlName = url_name;
+            postElement.innerHTML = `
+                <div class="post-author">
+                    <img src="${profileImageUrl}" alt="프로필" class="profile-pic">
+                    <div>
+                        <div class="author-name">${user_name || "익명"}</div>
+                        <div class="time">${formattedDate}</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <div class="post-left">
+                        <h3 class="post-title">${title}</h3>
+                        <p class="post-text">${previewText}</p>
+                        <div class="post-meta">
+                            <span class="heart" data-id="${id}">🤍</span> 
+                            <span class="heart-count" id="like-count-${id}">${likes || 0}</span> · 
+                            <span>💬 ${comments || 0}</span>
+                        </div>
+                    </div>
+                    ${representativeImage}
+                </div>
+            `;
+
+            postList.appendChild(postElement);
+        });
+
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+        postList.innerHTML = "<p>오류가 발생했습니다.</p>";
+    }
+});
+
+// ✅ `url_name`을 이용해 프로필 이미지(user_pic) 가져오는 함수 (비동기 병렬 요청)
+async function fetchProfileImages(posts) {
+    const urlNames = [...new Set(posts.map(post => post.url_name))]; // ✅ 중복 제거된 url_name 목록
+    const profileImageMap = {}; // ✅ url_name -> user_pic 저장할 객체
+
+    await Promise.all(urlNames.map(async (urlName) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/profile/${urlName}/`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`, // 토큰 전달
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`❌ 프로필 데이터를 불러오는 데 실패했습니다. (urlname: ${urlName})`);
+            }
+
+            const data = await response.json();
+            profileImageMap[urlName] = data.user_pic || `http://127.0.0.1:8000/media/default/user_default.jpg`;
+
+        } catch (error) {
+            console.error(`❌ 프로필 이미지 가져오기 오류 (urlname: ${urlName}):`, error);
+        }
+    }));
+
+    return profileImageMap;
+}
+
+// ✅ 게시글 클릭 시 상세 페이지 이동 (이벤트 위임 방식)
+document.querySelector(".post-list").addEventListener("click", function (event) {
+    const post = event.target.closest(".post");
+    if (!post || event.target.classList.contains("heart")) {
+        return; // 🛑 하트 클릭 시 상세 페이지 이동 방지
+    }
+
+    const postId = post.getAttribute("data-id");
+    const postData = window.posts.find(post => post.id == postId); // ✅ 전역 변수 사용
+
+    if (!postData || !postData.url_name) {
+        console.error("❌ 해당 postId에 대한 데이터를 찾을 수 없음:", postId);
+        return;
+    }
+
+    const urlName = postData.url_name;
+    window.location.href = `blog_detail.html?urlname=${urlName}&post_id=${postId}`;
+});
+
+    </script>
+        </body>
+        </html>

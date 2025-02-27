@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="prolog.css" />
+    <link rel="stylesheet" href="myblog.css" />
+    <!-- ✅ CSS 분리 -->
+    <title>SG Blog</title>
+  </head>
+  <body>
+    <div id="top-area">
+      <div class="top_menubar">
+        <a style="margin-left: 50px">이웃 블로그</a>
+        <a style="color: gray"> | </a>
+        <a
+          style="color: black; text-decoration-line: none"
+          href="./main_login.html"
+          >블로그 홈</a
+        >
+        <a style="color: gray"> | </a>
+        <a href="./main.html" class="login_btn">로그아웃</a>
+      </div>
+      <div id="blog-title">
+        <table role="presentation">
+          <tbody>
+            <tr>
+              <td id="blogTitleText">
+                <h1>
+                  <a id="blog-title-anchor">
+                    <span id="blogTitleName" class="itemtitlefont"
+                      >블로그 제목</span
+                    >
+                  </a>
+                </h1>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="blog-menu">
+        <div class="border">
+          <table>
+            <tbody>
+              <tr>
+                <td nowrap="nowrap" class="menu1">
+                  <ul>
+                    <li>
+                      <a
+                        href="./myprolog.html"
+                        style="color: black; text-decoration-line: none"
+                        >프롤로그</a
+                      >
+                    </li>
+                    <li>|</li>
+                    <li>
+                      <a style="color: #861f1c; font-weight: bold">블로그</a>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <hr style="margin-left: 140px" />
+    </div>
+
+    <!--프로필-->
+    <div class="bg-body">
+      <div class="con">
+        <p class="image">
+          <a href="#">
+            <img
+              class="user-profilepicture"
+              src="assets/profile.png"
+              alt="프로필 이미지"
+            />
+          </a>
+        </p>
+      </div>
+      <div class="name align">
+        <div class="user-nickname">
+          <strong class="itemfont col" id="nickNameArea">사용자본인</strong>
+          <br />
+          <span class="itemfont col">
+            <span class="blog_domain col"> </span>
+          </span>
+        </div>
+      </div>
+      <p class="caption align">
+        <span class="itemfont_col">프로필 소개</span>
+      </p>
+      <p class="more align">
+        <span class="m1"></span>
+      </p>
+      <div class="buttons">
+        <button class="write" onclick="location.href='write.html'">
+          글쓰기
+        </button>
+        <button class="settings" onclick="location.href='profile.html'">
+          프로필 관리
+        </button>
+      </div>
+    </div>
+
+    <!-- ✅ 카테고리 리스트 UI -->
+    <div class="bg-category">
+      <ul id="categoryList">
+        <!-- JavaScript가 동적으로 카테고리를 추가할 공간 -->
+      </ul>
+    </div>
+
+    <!--서로이웃-->
+    <div class="bg-neighbor">
+      <div class="neighbor-profile">
+        <div class="user-nickname" style="font-size: 15px">
+          <strong>본인</strong>
+        </div>
+        <div>이웃 커넥트</div>
+      </div>
+      <div class="neighbor-list">
+        <div class="all_neighborhood">
+          <span>전체 이웃</span>
+          <span id="neighbor-count" style="margin-left: 10px; color: green"
+            >0</span
+          ><span>명</span>
+          <hr style="width: 95%; border: 0.25px solid gray" />
+        </div>
+        <div
+          id="neighbor-container"
+          style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px"
+        ></div>
+
+        <!-- 페이지네이션 -->
+        <div id="pagination" style="text-align: center; margin-top: 10px">
+          <span id="page-indicator">1 / 1</span>
+          <button
+            id="prev-page"
+            style="background: none; border: none; cursor: pointer"
+          >
+            ◀
+          </button>
+          <button
+            id="next-page"
+            style="background: none; border: none; cursor: pointer"
+          >
+            ▶
+          </button>
+        </div>
+
+        <hr style="width: 80%; border: 0.25px solid gray" />
+        <a
+          id="neighbor-new-posts"
+          href="main_login.html"
+          style="margin-left: 10px; font-size: 13px; color: gray"
+        ></a>
+      </div>
+    </div>
+
+    <!--포스트 목록-->
+    <div class="pro_posts">
+      <div class="post_list">
+        <div class="post_list_title">
+          <strong>전체보기</strong> <a></a>
+          <a class="list_open"> 목록 열기 </a>
+        </div>
+        <div style="display: none" class="post_list_contents">
+          <div class="post_list_content_title">
+            <a>글 제목</a><a style="float: right">작성일</a>
+          </div>
+          <hr class="post_list_hr" />
+          <div class="post_list_contents_list">
+            <div>
+              <a>글 제목1</a><a style="float: right">2024.02.10</a>
+              <hr class="post_list_contents_hr" />
+            </div>
+            <div>
+              <a>글 제목2</a><a style="float: right">2024.02.10</a>
+              <hr class="post_list_contents_hr" />
+            </div>
+            <div>
+              <a>글 제목3</a><a style="float: right">2024.02.10</a>
+              <hr class="post_list_contents_hr" />
+            </div>
+            <div>
+              <a>글 제목4</a><a style="float: right">2024.02.10</a>
+              <hr class="post_list_contents_hr" />
+            </div>
+            <div>
+              <a>글 제목5</a><a style="float: right">2024.02.10</a>
+              <hr class="post_list_contents_hr" />
+            </div>
+            <div class="post_list_page">
+              <ul class="pagination">
+                <li><a href="#" class="left"> <이전 </a></li>
+                <li><a href="#" class="active num">1</a></li>
+                <li><a href="#" class="num">2</a></li>
+                <li><a href="#" class="num">3</a></li>
+                <li><a href="#" class="num">4</a></li>
+                <li><a href="#" class="num">5</a></li>
+                <li><a href="#" class="num">6</a></li>
+                <li><a href="#" class="num">7</a></li>
+                <li><a href="#" class="num">8</a></li>
+                <li><a href="#" class="right">다음></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="post_content">
+      <div class="post_title_content">
+        <div class="post_category"></div>
+        <div class="post_title" data-post-id="123">
+          첫번째 글을 작성해보세요!
+        </div>
+        <div class="post_writer_list">
+          <strong class="user-nickname" style="color: black">멘아</strong
+          >&nbsp;<a>2024. 9. 24. 23:21</a>
+          <a style="float: right; padding-right: 10px">URL 복사</a>
+          <a class="edit_post">수정</a>
+        </div>
+        <hr class="post_hr" />
+      </div>
+      <div class="post_contents"></div>
+      <div class="post_last_list">
+        <a class="heart_list">공감</a>
+        <button id="toggle-comment-btn" class="comment_list">댓글 쓰기</button>
+      </div>
+
+      <!-- 댓글 모듈 삽입 -->
+      <div id="comment-section">
+        <h3 class="comment-title">댓글</h3>
+        <div class="comments"></div>
+      </div>
+
+      <!-- 댓글 전용 CSS 연결 -->
+      <link rel="stylesheet" href="comment.css" />
+      <!-- ✅ comment.js도 추가 -->
+      <script src="comment.js"></script>
+
+      <div class="list_page">
+        <ul class="pagination">
+          <li><a href="#" class="left"> <이전 </a></li>
+          <li><a href="#" class="active num">1</a></li>
+          <li><a href="#" class="num">2</a></li>
+          <li><a href="#" class="num">3</a></li>
+          <li><a href="#" class="num">4</a></li>
+          <li><a href="#" class="num">5</a></li>
+          <li><a href="#" class="num">6</a></li>
+          <li><a href="#" class="num">7</a></li>
+          <li><a href="#" class="num">8</a></li>
+          <li><a href="#" class="right">다음></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!— ✅ JavaScript 분리 —>
+    <script src="myblog.js"></script>
+  </body>
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naver Blog Project</title>
+    <style>
+
+        html, body {
+            min-width:1280px;
+            overflow-y:auto;
+            overflow-x: auto;
+        }
+
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        
+
+/*헤더 부분*/        
+        .header {
+            display: flex;
+            justify-content: space-between; /* 좌우로 균등 배치 */
+            align-items: center; /* 세로 중앙 정렬 */
+            padding: 5px 17%; /* 좌우 패딩 설정 */
+            background-color: #f1d1d3;
+            color: white;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .header .logo {
+            height: 49px; /* 고정된 로고 크기 */
+            width: auto; /* 비율 유지 */
+            margin: 1px; /* margin (이미지를 둘러싸는 여백의 폭) 제거 */
+            transition: margin-left 0.3s ease;
+            font-size:27px;
+            font-weight:800;
+
+        }
+
+        .header .search {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .header .search input {
+            width: 60%; /* 검색창 너비 */
+            padding: 12px;
+            border: none;
+            border-radius: 0px;
+            margin-right: 300px;
+            border-color: #f1d1d3;
+
+        }
+
+        .header .search button { /*윗줄 검색 버튼*/
+            padding: 11px 13px;
+            border: none;
+            background-color: #da9d9c;
+            border-color: #da9d9c;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left:-193px;
+        }
+
+        
+        .header .search button:hover {
+            background-color: #861f1c;
+        }
+
+        .header .menu {
+            display: flex;
+        }
+
+
+        .header .menu button {
+            background-color: #da9d9c;
+            color: #fff;
+            border: none;
+            padding: 11px 16px;
+            border-radius:2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header .menu button:hover {
+            background-color: #861f1c;
+        }
+        
+        
+
+
+        .search select {
+            width:100%;
+            padding:11.8px;
+            border: 0.05px solid;
+            border-color: #da9d9c;
+            margin-right:20px;
+        }
+        
+        
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        
+
+ 
+
+/*왼쪽 부분*/
+        .left-column {
+            width: 100%;
+            padding: 20px;
+        }
+
+
+
+/* 카테고리 네비게이션 */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .category-nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+            border-bottom: 2.5px solid #ddd;
+            border-top: 2.5px solid #ddd;
+        }
+
+        .category-nav li {
+            margin-right: 30px;
+        }
+
+        .category-nav a {
+            display: block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .category-nav a:hover, 
+        .category-nav a.active {
+            color: #861f1c;
+            font-weight: bold;
+            border-bottom: 3px solid #861f1c;
+        }
+
+/* 글 목록 스타일 */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+/* 개별 글 */
+        .post {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+/* 작성자 정보 */
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .post-author img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .author-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .time {
+            font-size: 12px;
+            color: gray;
+            margin-top:6px;
+        }
+
+/* 글 내용 */
+        .post-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-text {
+            flex: 1;
+        }
+
+        .post-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .post-text p {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: gray;
+            margin-top:13px;
+        }
+
+        .post-content img {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <!-- 로고 -->
+        <div class="logo">SG blog</div>
+
+        <!-- 검색 영역 -->
+        <div class="search">
+            <div class="search-select">
+                <label for="search-type" class="visually-hidden"></label>
+                <select id="search-type" name="type">
+                    <option value="geul">글</option>
+                    <option value="blog">블로그</option>
+                    <option value="id">별명, 아이디</option>
+                </select>
+            </div>
+
+            <div class="search-input">
+                <label for="search-input" class="visually-hidden"></label>
+                <input id="search-input" type="text" placeholder="검색어를 입력하세요">
+            </div>
+
+            <button class="search-button">검색</button>
+        </div>
+
+        <!-- 메뉴 버튼 -->
+        <div class="menu">
+            <button onclick="location.href='login.html'">로그인</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="left-column">
+ 
+        
+            <!-- 카테고리 네비게이션 -->
+            <nav class="category-nav">
+                <ul>
+                    <li><a class="active">글</a></li>
+                    <li><a>블로그</a></li>
+                    <li><a>별명 · 아이디</a></li>
+                </ul>
+            </nav>
+        
+            <!-- 전체 공개된 글 목록 -->
+            <div class="post-list">
+                <div class="post">
+                    <div class="post-author">
+                        <img src="assets/profile.png" alt="프로필">
+                        <div>
+                            <div class="author-name">ㅇㅇ</div>
+                            <div class="time">7시간 전</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-text">
+                            <h3>전체 카테고리 글1</h3>
+                            <p>안녕하세요!</p>
+                            <div class="post-meta">
+                                <span>공감 66</span> · <span>댓글 18</span>
+                            </div>
+                        </div>
+                        <img src="https://via.placeholder.com/120" alt="대표사진">
+                    </div>
+                </div>
+        
+                <div class="post">
+                    <div class="post-author">
+                        <img src="assets/profile.png" alt="프로필">
+                        <div>
+                            <div class="author-name">사용자</div>
+                            <div class="time">9시간 전</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-text">
+                            <h3>전체 카테고리 글2</h3>
+                            <p>ㅇㅇㅇ</p>
+                            <div class="post-meta">
+                                <span>공감 49</span> · <span>댓글 3</span>
+                            </div>
+                        </div>
+                        <img src="https://via.placeholder.com/120" alt="대표사진">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // `loggedUser` 값을 가져와서 `urlname`으로 변경
+    if (urlParams.has("loggedUser")) {
+        const loggedUser = urlParams.get("loggedUser");
+        urlParams.delete("loggedUser"); // 기존 loggedUser 삭제
+        urlParams.set("urlname", loggedUser); // urlname으로 변경
+    }
+
+    // 새로운 URL을 백엔드 요청에 반영
+    const searchType = urlParams.get("type");
+    const searchQuery = urlParams.get("query");
+    const urlname = urlParams.get("urlname"); // 변경된 값 확인
+
+    console.log(`🔹 검색 유형: ${searchType}, 검색어: ${searchQuery}, urlname: ${urlname}`);
+
+    // 검색 실행
+    fetch(`http://127.0.0.1:8000/search?type=${encodeURIComponent(searchType)}&query=${encodeURIComponent(searchQuery)}&urlname=${encodeURIComponent(urlname)}`)
+        .then(response => response.json())
+        .then(data => {
+            renderSearchResults(searchType, data);
+        })
+        .catch(error => {
+            console.error("❌ 검색 결과 불러오기 오류:", error);
+            document.querySelector('.post-list').innerHTML = "<p>검색 결과를 불러오는 데 실패했습니다.</p>";
+        });
+});
+
+    </script>
+    <script>
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+        executeSearch();
+    }, 100); // 🔹 검색 실행을 약간 지연 (100ms)하여 페이지가 완전히 로드된 후 실행
+});
+
+function executeSearch() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchType = urlParams.get("type"); // 검색 유형 (geul, blog, id)
+    const searchQuery = urlParams.get("query"); // 검색어
+
+
+    console.log(`🔹 검색 유형: ${searchType}, 검색어: ${searchQuery}`);
+
+    // 🔹 검색어를 검색창에 자동 입력
+    document.getElementById("search-input").value = searchQuery;
+    document.getElementById("search-type").value = searchType;
+
+    // 🔹 검색 실행
+    fetch(`http://127.0.0.1:8000/search?type=${encodeURIComponent(searchType)}&query=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+            renderSearchResults(searchType, data);
+        })
+        .catch(error => {
+            console.error("❌ 검색 결과 불러오기 오류:", error);
+            document.querySelector('.post-list').innerHTML = "<p>검색 결과를 불러오는 데 실패했습니다.</p>";
+        });
+}
+
+        document.querySelector('.search-button').addEventListener('click', async function () {
+            const searchQuery = document.getElementById('search-input').value.trim();
+            const searchType = document.getElementById('search-type').value;
+        
+            if (!searchQuery) {
+                alert('검색어를 입력해주세요!');
+                return;
+            }
+        
+            // 🟢 검색어 길이 검사 (2글자 이상)
+            if (searchQuery.length < 2) {
+        alert("검색어는 2글자 이상 입력해주세요.");
+        return;
+    }
+        
+            // 🟢 카테고리 활성화 업데이트 (nav에서 active 변경)
+            updateActiveCategory(searchType);
+        
+            try {
+                let response, data;
+                if (searchType === "geul") {
+                    // 블로그 글 검색 API 요청
+                    response = await fetch(`http://127.0.0.1:8000/search/global-post/?q=${encodeURIComponent(searchQuery)}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                } else if (searchType === "blog") {
+                    // 블로그 검색 API 요청
+                    response = await fetch(`http://127.0.0.1:8000/search/global-blog/?q=${encodeURIComponent(searchQuery)}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                } else {
+                    // 별명/아이디 검색 API 요청
+                    response = await fetch(`http://127.0.0.1:8000/search/global-nickandid/?q=${encodeURIComponent(searchQuery)}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                }
+        
+                if (response.status === 200) {
+                    data = await response.json();
+                    renderSearchResults(searchType, data);
+                } else {
+                    console.error('검색 오류 발생');
+                    alert('검색 결과를 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('검색 중 에러 발생:', error);
+                alert('검색 중 에러가 발생했습니다.');
+            }
+        });
+        
+        
+        // 🟢 카테고리 활성화 업데이트 (nav에서 active 변경)
+        function updateActiveCategory(selectedType) {
+            document.querySelectorAll('.category-nav a').forEach(link => link.classList.remove('active'));
+        
+            let targetIndex = 0;
+            if (selectedType === "geul") {
+                targetIndex = 0; // 글
+            } else if (selectedType === "blog") {
+                targetIndex = 1; // 블로그
+            } else if (selectedType === "id") {
+                targetIndex = 2; // 별명 · 아이디
+            }
+        
+            // 해당 index의 <a> 태그에 active 클래스 추가
+            document.querySelectorAll('.category-nav li a')[targetIndex].classList.add("active");
+        }
+        
+        // 🟢 검색 결과 렌더링 함수
+function renderSearchResults(searchType, data) {
+    const resultContainer = document.querySelector('.post-list');
+    resultContainer.innerHTML = ''; // 이전 검색 결과 지우기
+
+    console.log("🔍 API 응답 데이터:", data);
+
+    if ((searchType === "geul" && (!data.posts || data.posts.length === 0)) ||
+        (searchType === "blog" && (!data.blogs || data.blogs.length === 0)) ||
+        (searchType === "id" && (!data.users || data.users.length === 0))) {
+        console.log("❌ 검색 결과가 없습니다.");
+        resultContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
+        return;
+    }
+
+    if (searchType === "geul") {
+        const posts = data.posts || [];
+
+        console.log("📌 검색된 게시글:", posts);
+
+        if (posts.length === 0) {
+            console.log("❌ posts 배열이 비어 있음.");
+            resultContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+            return;
+        }
+
+        // 🔹 "everyone"인 게시글만 필터링
+        const filteredPosts = posts.filter(post => post.visibility === "everyone");
+
+        console.log("📌 필터링된 게시글:", filteredPosts);
+
+        // 🔹 검색 결과가 없으면 메시지 표시
+        if (filteredPosts.length === 0) {
+            console.log("❌ 필터링된 게시글이 없음.");
+            resultContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+            return;
+        }
+
+        // 🔹 HTML 엔티티 디코딩 함수 (예: `&gt;` → `>`)
+        function decodeHTMLEntities(text) {
+            const textArea = document.createElement("textarea");
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
+
+        // 🔹 필터링된 게시글을 렌더링
+        filteredPosts.forEach(post => {
+            console.log(`📌 ${post.title}의 excerpt:`, post.excerpt);  // ✅ excerpt가 정상적으로 들어오는지 확인
+
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.style.cursor = "pointer"; // 클릭 가능하도록 설정
+
+            postElement.innerHTML = `
+                <div class="post-content">
+                    <div class="post-text">
+                        <h3>${post.title}</h3>
+                        <p>${decodeHTMLEntities(post.excerpt) || "내용 미리보기가 없습니다."}</p>
+                        <div class="post-meta">
+                            <span>작성자: ${post.username}</span> · <span>게시일: ${post.created_at}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 🔹 클릭 시 `blog_detail.html?urlname={urlname}&post_id={post_id}`로 이동
+            postElement.addEventListener("click", () => {
+                window.location.href = `blog_detail.html?urlname=${encodeURIComponent(post.urlname)}&post_id=${encodeURIComponent(post.post_id)}`;
+            });
+
+            resultContainer.appendChild(postElement);
+        });
+
+
+        
+    } else if (searchType === "blog") {
+    // 블로그 검색 결과 렌더링
+    data.blogs.forEach(blog => {
+        const blogPost = document.createElement('div');
+        blogPost.classList.add('post');
+        blogPost.style.cursor = "pointer";
+
+        blogPost.innerHTML = `
+        <div class="post-content">
+                <div class="post-text">
+                    <h3>${blog.blog_name}</h3>
+                    <p style="margin-bottom:15px;">${blog.intro}</p>
+                </div>
+        </div>
+        <div class="post-author">
+                <img src="http://127.0.0.1:8000${blog.user_pic}" alt="프로필" width="40" height="40">
+                <div class="author-name">${blog.username}</div>
+        </div>
+        `;
+
+        // 🔹 클릭 시 `blog.html?urlname=jhy` 로 이동 (기존 user → urlname 변경)
+        blogPost.addEventListener("click", () => {
+            window.location.href = `blog.html?urlname=${encodeURIComponent(blog.urlname)}`;
+        });
+
+        resultContainer.appendChild(blogPost);
+    });
+} else {
+    // 별명/아이디 검색 결과 렌더링
+    data.users.forEach(user => {
+        const userPost = document.createElement('div');
+        userPost.classList.add('post');
+        userPost.style.cursor = "pointer"; // 마우스 오버 시 클릭 가능하게 설정
+
+        userPost.innerHTML = `
+            <div class="post-author">
+                <img src="http://127.0.0.1:8000${user.user_pic}" alt="프로필" width="40" height="40">
+                <div>
+                    <div class="author-name">${user.username}</div>
+                </div>
+            </div>
+            <div class="post-content">
+                <div class="post-text">
+                    <h3>${user.blog_name}</h3>
+                    <p>${user.intro}</p>
+                </div>
+            </div>
+        `;
+
+        // 🔹 클릭 시 `blog.html?urlname=jhy` 로 이동 (기존 user → urlname 변경)
+        userPost.addEventListener("click", () => {
+            window.location.href = `blog.html?urlname=${encodeURIComponent(user.urlname)}`;
+        });
+
+        resultContainer.appendChild(userPost);
+    });
+}
+
+
+        }
+        
+        // 🟢 페이지 로드 시 URL 파라미터에 따라 검색 자동 실행
+        document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedType = urlParams.get("type"); // URL에서 선택한 검색 유형 가져오기
+
+    if (selectedType) {
+        // 🔹 모든 버튼에서 active 제거 후 선택한 옵션을 active 설정
+        document.querySelectorAll(".category-nav a").forEach(link => link.classList.remove("active"));
+
+        let targetIndex = 0;
+        if (selectedType === "geul") {
+            targetIndex = 0; // 글
+        } else if (selectedType === "blog") {
+            targetIndex = 1; // 블로그
+        } else if (selectedType === "id") {
+            targetIndex = 2; // 별명 · 아이디
+        }
+
+        document.querySelectorAll(".category-nav a")[targetIndex].classList.add("active");
+
+        // 🔹 상단 헤더의 select 박스 값도 변경
+        const searchTypeSelect = document.getElementById("search-type");
+        if (searchTypeSelect) {
+            searchTypeSelect.value = selectedType;
+        }
+    }
+})
+
+document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchType = urlParams.get("type"); // 검색 유형 (geul, blog, id)
+    const searchQuery = urlParams.get("query"); // 검색어
+
+
+    console.log(`🔹 검색 유형: ${searchType}, 검색어: ${searchQuery}`);
+
+    // 🔹 카테고리 네비게이션 업데이트
+    updateActiveCategory(searchType);
+
+    // 🔹 검색어를 검색창에 자동 입력
+    document.getElementById("search-input").value = searchQuery;
+    document.getElementById("search-type").value = searchType;
+
+    // 🔹 백엔드에서 검색 결과 가져오기
+    fetch(`http://127.0.0.1:8000/search?type=${encodeURIComponent(searchType)}&query=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+            renderSearchResults(searchType, data);
+        })
+        .catch(error => {
+            console.error("❌ 검색 결과 불러오기 오류:", error);
+            document.querySelector('.post-list').innerHTML = "<p>검색 결과를 불러오는 데 실패했습니다.</p>";
+        });
+});
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const loginButton = document.querySelector(".menu button");
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken) {
+        try {
+            // 🔹 로그인된 사용자 정보 가져오기
+            const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const loggedInname=data.username;
+                const loggedInUser = data.urlname;
+
+                // 🔹 버튼을 사용자 이름으로 변경 & 프로필 페이지로 이동
+                loginButton.textContent = loggedInname;
+                loginButton.onclick = () => location.href = `profile.html?urlname=${encodeURIComponent(loggedInUser)}`;
+            } else {
+                throw new Error("사용자 정보를 가져올 수 없습니다.");
+            }
+        } catch (error) {
+            console.error("❌ 사용자 정보 가져오기 오류:", error);
+            showLoginButton(); // 로그인 정보가 없거나 오류 발생 시 로그인 버튼 유지
+        }
+    } else {
+        showLoginButton(); // 로그인 정보가 없을 경우 기본 로그인 버튼 표시
+    }
+
+    function showLoginButton() {
+        loginButton.textContent = "로그인";
+        loginButton.onclick = () => location.href = "login.html";
+    }
+});
+        </script>
+        
+</body>
+</html>

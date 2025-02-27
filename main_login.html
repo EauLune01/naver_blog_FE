@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naver Blog Project</title>
+    <style>
+
+        html, body {
+            min-width:1280px;
+            overflow-y:auto;
+            overflow-x: auto;
+        }
+
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+
+/*헤더 부분*/        
+.header {
+            display: flex;
+            justify-content: space-between; /* 좌우로 균등 배치 */
+            align-items: center; /* 세로 중앙 정렬 */
+            padding: 5px 17%; /* 좌우 패딩 설정 */
+            background-color: #f1d1d3;
+            color: white;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .header .logo {
+            height: 49px; /* 고정된 로고 크기 */
+            width: auto; /* 비율 유지 */
+            margin: 1px; /* margin (이미지를 둘러싸는 여백의 폭) 제거 */
+            transition: margin-left 0.3s ease;
+            font-size:27px;
+            font-weight:800;
+
+        }
+
+        .header .search {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .header .search input {
+            width: 60%; /* 검색창 너비 */
+            padding: 12px;
+            border: none;
+            border-radius: 0px;
+            margin-right: 300px;
+            border-color: #f1d1d3;
+
+        }
+
+        .header .search button { /*윗줄 검색 버튼*/
+            padding: 11px 13px;
+            border: none;
+            background-color: #da9d9c;
+            border-color: #da9d9c;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left:0px;
+        }
+
+        
+        .header .search button:hover {
+            background-color: #861f1c;
+        }
+
+        .header .menu {
+            display: flex;
+        }
+
+
+        .header .menu button {
+            background-color: #da9d9c;
+            color: #fff;
+            border: none;
+            padding: 11px 16px;
+            border-radius:2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header .menu button:hover {
+            background-color: #861f1c;
+        }
+
+        .search select {
+            width:100%;
+            padding:11.8px;
+            border: 0.05px solid;
+            border-color: #da9d9c;
+            margin-right:20px;
+        }
+        
+        .main-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* 높이를 컨테이너 전체로 늘리기 */
+    margin: 20px;
+}
+
+/*헤더 부분 오른쪽 계정 이름 부분*/
+        .header-profile img{
+            width:38px;
+            border-radius:50px;
+        }
+
+        .header-profile {
+            display:flex;
+            flex-direction:row;
+            font-size:15px;
+        }
+
+        .header-profile-name{
+            margin-left:8px;
+            margin-top:10px;
+            margin-right:80px;
+        }
+
+
+
+        .header-profile button { /*윗줄 검색 버튼*/
+            padding: 5px 10px;
+            border: none;
+            background-color: #da9d9c;
+            border-color: #da9d9c;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-size:14px;
+            margin-top:5px;
+            margin-right:-150px;
+        }
+        
+        .header-profile button:hover {
+            background-color: #861f1c;
+        }
+
+        .neighbor-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 기본 텍스트 색상 유지 */
+}
+
+.neighbor-name {
+    font-weight: bold; /* 글씨 강조 (선택 사항) */
+    margin-left: 5px; /* 간격 조정 */
+}
+
+.neighbor-profile {
+    width: 50px; /* 프로필 사진 크기 */
+    height: 50px;
+    border-radius: 50%; /* 둥근 이미지 */
+}
+
+
+
+/* 왼쪽 게시글 부분 */
+.post {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 15px; /* 이미지와 글 내용 사이 간격 조정 */
+    padding: 20px 10px;
+    border-bottom: 1px solid #ddd;
+    margin-top: 20px; /* 위쪽 간격 추가 */
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+
+.post img {
+    width: 80px;  /* 이미지 크기 조정 */
+    height: 80px;
+    object-fit: cover; /* 비율 유지하면서 크기 조정 */
+    border-radius: 50%;
+    flex-shrink: 0; /* 크기가 줄어들지 않도록 설정 */
+}
+
+.post-content {
+    flex: 1; /* 내용이 남은 공간을 차지하도록 설정 */
+    min-width: 0; /* 내용이 넘치지 않도록 설정 */
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 프로필 사진과 닉네임 사이 간격 조정 */
+}
+
+.post-author img { /*게시글 작성자 프로필 사진*/
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.post-title { /*게시글 제목*/
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top:16px;
+}
+
+.post-text {
+    font-size: 14px;
+    color: #666;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.post-actions { /*게시글에서 좋아요, 댓글 등 */
+    font-size: 12px;
+    color: #777;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.post-actions span {
+    margin-right: 8px;
+}
+
+.post-actions img {
+    width: 16px;
+    height: 16px;
+}
+
+
+
+
+.post-content {
+    display: flex;
+    flex: 1; /* ✅ 글 내용이 최대한 차지하도록 설정 */
+    align-items: center; /* ✅ 세로 중앙 정렬 */
+    justify-content: space-between;
+}
+
+
+/* 📌 대표 사진 스타일 (완전히 오른쪽 끝 + 세로 중앙 정렬) */
+.post-thumbnail {
+    width: 130px;  /* ✅ 대표 사진 크기 */
+    height: 130px;
+    object-fit: cover; /* ✅ 네모 안에 꽉 차도록 */
+    border-radius: 0 !important; /* ✅ 둥글어지는 거 완전 제거 */
+    margin-left: auto; /* ✅ 왼쪽 내용을 밀어내고 오른쪽 끝으로 */
+    display: block; /* ✅ flex 속성 문제 해결 */
+}
+
+
+/* 왼쪽 게시글 부분 높이 늘리기 */
+.left-column {
+    width: 70%; /* 왼쪽 부분 크기 조절 */
+    max-width: 1500px; /* 최대 너비 제한 */
+    padding: 25px;
+    margin-top: 30px; /* 상단 여백 추가 */
+}
+
+/* 게시물 목록 아래쪽 여백 추가 */
+.mutual-posts {
+    margin-top: 40px; /* 게시물 목록과 이웃 새글 박스 사이의 간격을 넓힘 */
+}
+
+/* 이웃새글 메시지 스타일 */
+       /* 이웃 새글 박스 위로 올리기 */
+        .new-posts {
+        position: relative; /* 상대 위치로 설정 */
+        top: -20px; /* 박스를 위로 20px 올리기 */
+        margin-bottom: 20px; /* 아래쪽 간격 추가 */
+        z-index: 999;
+        }
+
+        /* new-posts 글씨 안 보이는 문제 해결 */
+        .new-posts p {
+        font-size: 18px;
+        color: #333; /* 텍스트 색상 */
+        font-weight: bold;
+        margin-bottom: 20px; /* 아래쪽 여백 추가 */
+        }
+
+
+/*게시글 작성자 관련*/
+        .post-author {
+            display: flex;
+            align-items: center; /* 세로 정렬 유지 */
+            gap: 8px; /* 프로필 사진, 이름, 날짜 사이 간격 */
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .author-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .time {
+            font-size: 12px;
+            color: gray;
+            margin-top:3px;
+        }
+
+
+/*좋아요*/
+        .heart {
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .heart.active {
+                color: red; /* 채워진 하트 색상 */
+        }
+
+
+/*게시글 본문 부분*/       
+        .post-text {
+            max-width: 900px; /* 원하는 최대 가로 너비 설정 */
+            word-wrap: break-word; /* 긴 단어도 줄바꿈되도록 설정 */
+            overflow-wrap: break-word; /* 텍스트가 박스를 넘으면 자동 줄바꿈 */
+            white-space: normal; /* 기본적으로 줄바꿈 허용 */
+            line-height: 1.7; /* 줄 간격 조절 */
+        }
+
+
+/*오른쪽*/
+.right-sidebar {
+    width: 350px; /* 기존보다 더 넓게 설정 */
+    height: 1000px; /* 기존 높이보다 확장 */
+    min-height: 100vh; /* 최소 높이를 화면 전체 높이로 설정 */
+    flex-shrink: 0; /* 크기 줄어들지 않도록 설정 */
+    margin-left: 30px; /* 왼쪽 여백 */
+    position: absolute; /* 오른쪽으로 고정 */
+    right: 8%; /* 기존 10% → 8%로 변경 (너무 오른쪽으로 붙지 않게) */
+    top: 90px; /* 위쪽 여백 설정 */
+    overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
+}
+
+
+
+
+        /* 프로필 영역 */
+        .profile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profilepicture {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .profile-status {
+            font-size: 12px;
+            color: gray;
+        }
+
+        .logout-btn {
+            background-color: white;
+            border: 1px solid lightgray;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* 메뉴 */
+        .menu {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .menu button {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .menu button:hover {
+            background-color: #861f1c;
+        }
+
+        .menu .active {
+            background-color: #da9d9c;
+            color: white;
+        }
+
+        /* 알림 탭 (내 소식, 내 활동, 이웃 목록)*/
+        .notification-tabs {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 13px;
+        }
+
+        .notification-tabs div {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .notification-tabs .active {
+            border-bottom: 1.5px solid black;
+        }
+
+        /* 알림 리스트 */
+        .notifications {
+            margin-bottom: 18px;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-user {
+            font-weight: bold;
+            color: #2c8f3b;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: gray;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: gray;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left:5px;
+        }
+
+        .delete-btn:hover {
+            color: black;
+        }
+
+        /* 모두 삭제 버튼 */
+        .delete-all {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-all:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* 좋아요(하트) 기능 */
+        .heart {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .liked {
+            color: red;
+        }
+
+
+
+/* 이웃 목록 컨테이너 */
+.neighbor-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 이웃 항목 */
+.neighbor-item {
+    display: flex;
+    align-items: center;  /* 수직 중앙 정렬 */
+    width: calc(50% - 10px);  /* 1줄에 2명씩 */
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* 이웃 내용 */
+.neighbor-content {
+    display: flex;
+    flex-direction: row;  /* 사진 왼쪽, 닉네임 오른쪽 */
+    align-items: center;  /* 수직 중앙 정렬 */
+    justify-content: flex-start;  /* 왼쪽 정렬 */
+    width: 100%; /* 전체 너비 사용 */
+}
+
+/* 프로필 이미지 */
+.neighbor-profile {
+    width: 35px;  /* 크기 조정 */
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;  /* 이미지 오른쪽 간격 */
+    flex-shrink: 0; /* 크기 고정 */
+}
+
+/* 닉네임 스타일 */
+.neighbor-name {
+    font-size: 14px;  /* 글자 크기 */
+    font-weight: bold;
+    text-align: left;  /* 왼쪽 정렬 */
+    white-space: nowrap; /* 닉네임이 줄 바꿈되지 않도록 설정 */
+    overflow: hidden; /* 너무 길면 숨김 */
+    text-overflow: ellipsis; /* 생략 부호(...) 추가 */
+}
+
+.left-column {
+    margin-top:-5px;
+    margin-bottom:5px;
+    margin-left:25px;
+    font-size:20px;
+    font-weight:700;
+}
+
+
+    </style>
+</head>
+
+    <header class="header">
+        <!-- 로고 -->
+        <div class="logo">SG blog</div>
+
+        <!-- 검색 영역 -->
+        <div class="search">
+            <div class="search-select">
+                <label for="search-type" class="visually-hidden"></label>
+                <select id="search-type" name="type">
+                    <option value="geul">글</option>
+                    <option value="blog">블로그</option>
+                    <option value="id">별명, 아이디</option>
+                </select>
+            </div>
+            <button class="search-button">로 검색하기</button>
+        </div>
+
+        <div class="header-profile">
+            <button class="header-profile-setting" onclick="redirectToProfile()">프로필 수정</button>
+        </div>       
+    </header>
+
+    <div class="main-container">
+        <div class="left-column">
+           이웃 새글 
+             <div class="new-posts">
+            </div>
+        </div>
+
+
+        <div class="right-sidebar">
+            <!-- 프로필 정보 -->
+            <div class="profile">
+                <div class="profile-left">
+                    <!-- 프로필 사진 변경 -->
+                    <img class="user-profilepicture" id="profile-image" src="assets/profile.png" alt="프로필 이미지">
+                    <div class="profile-info">
+                        <span class="profile-name user-nickname" id="user-nickname"></span> <!-- 로그인한 사용자 이름 표시 -->
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="location.href='main.html'">로그아웃</button>
+            </div>
+            <!-- 메뉴 -->
+            <div class="menu">
+                <button class="active" onclick="location.href='myprolog.html'">내 블로그</button>
+                <button onclick="location.href='write.html'">✏ 글쓰기</button>
+            </div>
+        
+            <!-- 알림 탭 -->
+            <div class="notification-tabs">
+                <div class="tab active" data-tab="news">내 소식</div>
+                <div class="tab" data-tab="activity">내 활동</div>
+                <div class="tab" data-tab="neighbors">이웃 목록</div>
+            </div>
+        
+            <!-- 알림 리스트 -->
+            <div class="notifications">
+                <!-- 여기에 JavaScript가 백엔드에서 받아온 데이터를 동적으로 추가할 거임 -->
+            </div>
+        </div>
+    </div>
+        <script>
+
+let loggedInUserUrlname = '';
+
+// 사용자 URL 이름을 서버에서 가져오는 함수
+async function getUserUrlname() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const userData = await response.json();
+            loggedInUserUrlname = userData.urlname; // 로그인한 사용자의 urlname 저장
+        } else {
+            console.log("❌ 사용자 정보 불러오기 실패:", response.status);
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+}
+
+// 프로필 수정 페이지로 리디렉션
+async function redirectToProfile() {
+    // URLname을 서버에서 가져오기 전에 클릭이 실행될 수 있으므로 기다리기
+    await getUserUrlname();
+
+    if (loggedInUserUrlname) {
+        location.href = `profile.html?urlname=${encodeURIComponent(loggedInUserUrlname)}`;
+    } else {
+        console.log("❌ 로그인한 사용자의 urlname을 가져올 수 없습니다.");
+    }
+}
+            // 로그인한 사용자의 프로필 정보를 받아오는 함수
+async function fetchUserProfile() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const userData = await response.json();
+            const userNickname = userData.username;
+            const userPic = userData.user_pic;
+
+            // 프로필 이미지 경로 설정
+            let fullImageUrl;
+            if (userPic && userPic.includes('user_pics')) {
+                fullImageUrl = `http://127.0.0.1:8000${userPic}`;
+            } else {
+                fullImageUrl = `http://127.0.0.1:8000/media/default/user_default.jpg`;
+            }
+
+            // 프로필 정보 업데이트
+            document.getElementById("user-nickname").textContent = userNickname;
+            document.getElementById("profile-image").src = fullImageUrl;
+        } else {
+            console.log("❌ 사용자 프로필 정보 불러오기 실패:", response.status);
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+}
+
+// 페이지가 로드된 후 프로필 정보 불러오기
+document.addEventListener("DOMContentLoaded", fetchUserProfile);
+
+         document.addEventListener("DOMContentLoaded", async function () {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const userUrlname = await getUserUrlname(); // 로그인한 사용자의 urlname 가져오기
+
+    // API 엔드포인트 설정 (이웃 목록은 로그인한 사용자에 따라 동적 URL 적용)
+    const API_ENDPOINTS = {
+        news: "http://127.0.0.1:8000/news/list/",
+        activity: "http://127.0.0.1:8000/activity/list/",
+        neighbors: `http://127.0.0.1:8000/profile/${userUrlname}/neighbors/` // 백틱 사용
+    };
+
+    const notificationsContainer = document.querySelector(".notifications");
+    const tabs = document.querySelectorAll(".tab");
+
+    // 탭 클릭 이벤트 추가
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const tabType = tab.getAttribute("data-tab");
+            fetchNotifications(API_ENDPOINTS[tabType], tabType);
+        });
+    });
+
+    // 알림 가져오는 함수
+    async function fetchNotifications(apiUrl, tabType) {
+        try {
+            const response = await fetch(apiUrl, { // API 호출 URL 수정
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                console.log(`📢 ${apiUrl} 데이터:`, data);
+
+                notificationsContainer.innerHTML = ""; // 기존 데이터 초기화
+
+                if (tabType === "neighbors") {
+    // "이웃 목록" 처리 (1줄에 2명씩 표시하고 user_pic 추가)
+    const neighborContainer = document.createElement("div");
+    neighborContainer.classList.add("neighbor-container");
+
+    data.neighbors.forEach((neighbor, index) => {
+        const { username, user_pic, urlname } = neighbor; // urlname 추가
+
+        // user_pic 경로 설정: 기본 사진(default)인지, 사용자 사진(user_pics)인지 확인
+        let fullImageUrl;
+        if (user_pic && user_pic.includes('user_pics')) {
+            fullImageUrl = `http://127.0.0.1:8000${user_pic}`;
+        } else {
+            fullImageUrl = `http://127.0.0.1:8000/media/default/user_default.jpg`;
+        }
+
+        const neighborItem = document.createElement("div");
+        neighborItem.classList.add("neighbor-item");
+
+        // 클릭 시 이동할 URL
+        const profileUrl = `http://127.0.0.1:5500/blog.html?urlname=${encodeURIComponent(urlname)}`;
+
+        neighborItem.innerHTML = `
+            <div class="neighbor-content">
+                <a href="${profileUrl}" class="neighbor-link">
+                    <img src="${fullImageUrl}" alt="${username}" class="neighbor-profile">
+                </a>
+                <a href="${profileUrl}" class="neighbor-link">
+                    <span class="neighbor-name">${username}</span>
+                </a>
+            </div>
+        `;
+
+        // 짝수 번째 아이템에 줄바꿈 추가 (1줄에 2명씩)
+        if (index % 2 === 0 && index !== 0) {
+            neighborContainer.appendChild(document.createElement("br"));
+        }
+
+        // DOM에 추가
+        neighborContainer.appendChild(neighborItem);
+    });
+
+    notificationsContainer.appendChild(neighborContainer);
+}
+ else {
+               // 로그인한 사용자의 urlname 가져오기
+let loggedInUserUrlname = null;
+
+async function getUserUrlname() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const userData = await response.json();
+            loggedInUserUrlname = userData.urlname; // 로그인한 사용자의 urlname 저장
+        } else {
+            console.log("❌ 사용자 정보 불러오기 실패:", response.status);
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+}
+
+// post_id가 몇 번째(n)인지 가져오는 함수
+async function getPostIndex(postId) {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/posts/me/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const posts = await response.json();
+            const index = posts.findIndex(post => post.id === postId);
+            return index !== -1 ? index + 1 : null; // 1-based index로 변환
+        } else {
+            console.log("❌ 내 게시글 목록 불러오기 실패:", response.status);
+            return null;
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+        return null;
+    }
+}
+
+// 알림 클릭 이벤트 추가 (업데이트된 버전)
+async function handleNotificationClick(post_urlname, post_id) {
+    if (!loggedInUserUrlname) {
+        await getUserUrlname();
+    }
+
+    if (post_urlname === loggedInUserUrlname) {
+        // 내가 쓴 글이라면 `myblog.html?n=` 형식으로 이동
+        const postIndex = await getPostIndex(post_id);
+        if (postIndex !== null) {
+            window.location.href = `http://127.0.0.1:5500/myblog.html?n=${postIndex}`;
+        } else {
+            alert("게시글 정보를 찾을 수 없습니다.");
+        }
+    } else {
+        // 다른 사용자의 글이라면 기존 URL로 이동
+        window.location.href = `http://127.0.0.1:5500/blog_detail.html?urlname=${encodeURIComponent(post_urlname)}&post_id=${encodeURIComponent(post_id)}`;
+    }
+}
+
+// "내 소식" & "내 활동" 처리
+data.forEach(activity => {
+    const { type, content, created_at, post_urlname, post_id } = activity;
+
+    let icon = "";
+    if (type === "written_comment" || type === "post_comment") {
+        icon = `<span class="icon comment">💬</span>`; // 댓글 아이콘
+    } else if (type === "written_reply" || type === "comment_reply") {
+        icon = `<span class="icon reply">↩</span>`; // 대댓글 아이콘
+    } else if (type === "post_like" || type === "liked_post" || type === "liked_comment") {
+        icon = `<span class="icon like">❤️</span>`; // 좋아요 아이콘
+    }
+
+    // 날짜 포맷 변경 (YYYY. M. D. HH:mm)
+    let dateObj = new Date(created_at);
+    let formattedDate = `${dateObj.getFullYear()}. ${dateObj.getMonth() + 1}. ${dateObj.getDate()} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+
+    // 알림 HTML 생성
+    const notificationItem = document.createElement("div");
+    notificationItem.classList.add("notification-item");
+    notificationItem.innerHTML = `
+        <div class="notification-content">
+            ${icon} <span class="notification-user">${content}</span>
+            <div class="notification-time">${formattedDate}</div>
+        </div>
+    `;
+
+    // **클릭 시 이동**
+    notificationItem.style.cursor = "pointer";
+    notificationItem.addEventListener("click", () => handleNotificationClick(post_urlname, post_id));
+
+    notificationsContainer.appendChild(notificationItem);
+});
+
+
+                }
+
+            } else {
+                alert("알림을 불러올 수 없습니다.");
+                console.log(`❌ ${apiUrl} 응답 상태 코드:`, response.status);
+            }
+        } catch (error) {
+            console.error("❌ 서버 연결 오류:", error);
+            alert("서버 연결에 실패했습니다.");
+        }
+    }
+
+    // 로그인한 사용자의 urlname 가져오는 함수
+    async function getUserUrlname() {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.status === 200) {
+                const userData = await response.json();
+                return userData.urlname; // 로그인한 사용자의 urlname 반환
+            } else {
+                console.log("❌ 사용자 정보 불러오기 실패:", response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error("❌ 서버 연결 오류:", error);
+            return null;
+        }
+    }
+
+    // 기본적으로 "내 소식" 데이터를 불러오기
+    fetchNotifications(API_ENDPOINTS.news, "news");
+});
+
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const API_ENDPOINTS = {
+        mutualPosts: "http://127.0.0.1:8000/posts/mutual/recentweekly/",
+    };
+
+    const postsContainer = document.querySelector(".new-posts"); // 게시글이 추가될 컨테이너
+
+    async function fetchMutualPosts() {
+    try {
+        const response = await fetch(API_ENDPOINTS.mutualPosts, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            console.log("📢 받은 데이터:", data);
+
+            // 기존 게시물 초기화
+            postsContainer.innerHTML = "";
+
+            // 데이터 순회하여 HTML 동적으로 생성
+            data.forEach(post => {
+                const { id, user_name, user_pic, title, content, total_likes, total_comments, created_at, images } = post;
+
+                let previewText = content
+                    .replace(/<[^>]*>/g, "") // 모든 HTML 태그 제거
+                    .replace(/대표사진 선택/g, "") // '대표 사진 선택' 제거
+                    .replace(/이미지 설명을 입력하세요\.\.\./g, "") // '이미지 설명을 입력하세요...' 제거
+                    .trim();
+
+                previewText = previewText.length > 125 ? previewText.substring(0, 125) + "..." : previewText;
+
+                let fullImageUrl = user_pic && user_pic.startsWith("/media/") ? `http://127.0.0.1:8000${user_pic}` : "";
+
+                // 📌 대표 사진 가져오기 (is_representative=true인 이미지)
+                let representativeImage = "";
+                if (images && images.length > 0) {
+                    const repImage = images.find(img => img.is_representative);
+                    if (repImage) {
+                        representativeImage = `<div class="post-right"><img src="${repImage.image}" alt="대표 이미지" class="post-thumbnail"></div>`;
+                    }
+                }
+
+                let dateObj = new Date(created_at);
+                let formattedDate = `${dateObj.getFullYear()}. ${dateObj.getMonth() + 1}. ${dateObj.getDate()} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+
+                // 📌 게시글 HTML 생성 (`data-id`를 하트 버튼과 게시물에 추가)
+                const postHTML = `
+                    <div class="post" data-id="${id}">
+                        <div class="post-content">
+                            <div class="post-left">
+                                <div class="post-author">
+                                    ${fullImageUrl ? `<img src="${fullImageUrl}" alt="${user_name}" class="profile-pic">` : ""}
+                                    <div class="author-info">
+                                        <span class="author-name">${user_name}</span>
+                                        <span class="time">${formattedDate}</span>
+                                    </div>
+                                </div>
+                                <div class="post-title">${title}</div>
+                                <div class="post-text">${previewText}</div>
+                                <div class="post-actions">
+                                    <span class="heart" data-id="${id}">🤍</span>
+                                    <span class="heart-count" id="like-count-${id}">${total_likes}</span>
+                                    <span>💬 ${total_comments}</span>
+                                </div>
+                            </div>
+                            ${representativeImage} <!-- ✅ 대표 사진 추가 -->
+                        </div>
+                    </div>
+                `;
+
+                postsContainer.innerHTML += postHTML;
+            });
+
+            // 📌 게시물 클릭 이벤트 추가 (상세 페이지 이동)
+document.querySelectorAll(".post").forEach(post => {
+    post.addEventListener("click", function (event) {
+        if (event.target.classList.contains("heart")) {
+            return; // 🛑 하트 클릭 시 상세 페이지 이동 방지
+        }
+        const postId = this.getAttribute("data-id");
+
+        // 해당 게시물의 url_name을 가져오기 위해 posts 배열을 활용
+        const postData = data.find(post => post.id == postId);
+        if (!postData) {
+            console.error("❌ 해당 postId에 대한 데이터를 찾을 수 없음:", postId);
+            return;
+        }
+
+        const urlName = postData.url_name;
+        window.location.href = `blog_detail.html?post_id=${postId}&urlname=${urlName}`;
+
+    });
+});
+
+
+            // 📌 하트 버튼 클릭 이벤트 추가 (좋아요 요청)
+            document.querySelectorAll(".heart").forEach(heart => {
+    heart.addEventListener("click", async function (event) {
+        event.stopPropagation(); // 🛑 게시물 클릭 이벤트 방지
+
+        const postId = this.getAttribute("data-id");
+
+        if (!postId || postId === "null") {
+            console.error("❌ postId가 null입니다. data-id가 HTML에서 정상적으로 추가되었는지 확인하세요.");
+            return;
+        }
+
+        const likeCountElement = document.getElementById(`like-count-${postId}`);
+
+        try {
+            console.log(`🔥 좋아요 요청을 보냄: /posts/${postId}/heart/`);
+
+            const likeResponse = await fetch(`http://127.0.0.1:8000/posts/${postId}/heart/`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            // ✅ 서버 응답을 JSON으로 변환
+            const result = await likeResponse.json();
+            console.log(`📢 서버 응답 데이터:`, result);
+
+            // ✅ 서버 응답을 기반으로 좋아요 상태 업데이트
+            if (result.message === "하트 추가") {
+                this.textContent = "❤️"; // 좋아요 추가 상태
+                likeCountElement.textContent = result.like_count; // 서버에서 받은 좋아요 개수 반영
+            } else if (result.message === "하트 취소") {
+                this.textContent = "🤍"; // 좋아요 취소 상태
+                likeCountElement.textContent = result.like_count; // 서버에서 받은 좋아요 개수 반영
+            } else {
+                console.warn("⚠️ 예상치 못한 서버 응답:", result);
+            }
+
+        } catch (error) {
+            console.error("❌ 서버 연결 오류:", error);
+        }
+    });
+});
+        } else {
+            alert("게시글을 불러올 수 없습니다.");
+            console.log(`❌ 응답 상태 코드:`, response.status);
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+        alert("서버 연결에 실패했습니다.");
+    }
+}
+
+    // 기본적으로 "서로이웃 게시글"을 불러오기
+    fetchMutualPosts();
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+                const accessToken = localStorage.getItem("access_token");
+                if (!accessToken) {
+                    alert("로그인이 필요합니다.");
+                    window.location.href = "login.html";
+                    return;
+                }
+            
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`,
+                            "Content-Type": "application/json"
+                        }
+                    });
+            
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        const nickname = data.username; // 닉네임 가져오기
+                        const profilePic = data.user_pic; // 프로필 사진 가져오기
+            
+                        // 🔥 닉네임 변경
+                        document.querySelectorAll(".user-nickname").forEach(el => {
+                            el.innerText = nickname;
+                        });
+            
+                        // 🔥 프로필 사진 변경
+                        document.querySelectorAll(".user-profilepicture").forEach(img => {
+                            img.src = profilePic;
+                        });
+
+                        document.querySelectorAll(".itemtitlefont").forEach(e2 => {
+                                e2.innerText = blogname;
+                            });
+            
+                    } else {
+                        alert("사용자 정보를 불러올 수 없습니다.");
+                        console.log("❌ 응답 상태 코드:", response.status);
+                    }
+                } catch (error) {
+                    console.error("❌ 서버 연결 오류:", error);
+                    alert("서버 연결에 실패했습니다.");
+                }
+            });
+            
+
+
+
+
+
+
+
+function executeSearch() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchType = urlParams.get("type"); // 검색 유형 (geul, blog, id)
+    const searchQuery = urlParams.get("query"); // 검색어
+
+
+    console.log(`🔹 검색 유형: ${searchType}, 검색어: ${searchQuery}`);
+
+    // 🔹 검색창에 자동 입력
+    document.getElementById("search-input").value = searchQuery;
+    document.getElementById("search-type").value = searchType;
+
+    // 🔹 로딩 메시지 표시
+    document.querySelector('.post-list').innerHTML = "<p>검색 중...</p>";
+
+    // 🔹 백엔드에서 검색 결과 가져오기
+    fetch(`http://127.0.0.1:8000/search?type=${encodeURIComponent(searchType)}&query=${encodeURIComponent(searchQuery)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`서버 응답 오류: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.querySelector('.post-list').innerHTML = ""; // 로딩 메시지 제거
+            renderSearchResults(searchType, data);
+        })
+        .catch(error => {
+            console.error("❌ 검색 결과 불러오기 오류:", error);
+            document.querySelector('.post-list').innerHTML = "<p>검색 결과를 불러오는 데 실패했습니다.</p>";
+        });
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchButton = document.querySelector(".search-button");
+    const searchTypeSelect = document.getElementById("search-type");
+
+    searchButton.addEventListener("click", async function () {
+        const searchType = searchTypeSelect.value; // 선택한 검색 유형
+        const accessToken = localStorage.getItem("access_token"); // 로그인한 사용자 토큰
+        let loggedInUser = "";
+
+        if (accessToken) {
+            try {
+                // 🔹 로그인된 사용자 정보 가져오기
+                const response = await fetch("http://127.0.0.1:8000/profile/me/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    loggedInUser = encodeURIComponent(data.username);
+                } else {
+                    console.error("사용자 정보를 가져올 수 없습니다.");
+                }
+            } catch (error) {
+                console.error("사용자 정보 가져오기 오류:", error);
+            }
+        }
+
+        // 🔹 검색 페이지로 이동 (로그인된 사용자 정보 포함)
+        redirectToSearch(searchType, loggedInUser);
+    });
+
+    function redirectToSearch(searchType, urlname) {
+        console.log(`🔹 검색 실행: ${searchType}, 로그인된 사용자: ${urlname}`);
+
+        let url = `search.html?type=${encodeURIComponent(searchType)}`;
+        if (urlname) {
+            url += `&urlname=${urlname}`;
+        }
+
+        window.location.href = url;
+    }
+});
+        </script>
+        
+</body>
+</html>
+            
