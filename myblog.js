@@ -273,108 +273,251 @@ function removeUnnecessaryButtons(htmlContent) {
   return tempDiv.innerHTML;
 }
 
-async function fetchRecentPost() {
-  // ✅ URL에서 n 값 가져오기 (기본값 1)
-  const urlParams = new URLSearchParams(window.location.search);
-  const n = urlParams.get("n") || 1; // `n` 값이 없으면 기본값 1
+document.addEventListener("DOMContentLoaded", function () {
+  fetchRecentPost(); // ✅ 새로고침 후에도 게시물 정상 불러오기
+});
 
-  // ✅ 백엔드 API 요청 URL에 n 값을 반영
+// ✅ 최근 게시물 가져오기 + UI 업데이트
+async function fetchRecentPost() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const n = urlParams.get("n") || 1;
   const url = `http://127.0.0.1:8000/posts/me/recent/?n=${n}`;
 
   const accessToken = localStorage.getItem("access_token");
   if (!accessToken) {
-    alert("로그인이 필요합니다.");
-    window.location.href = "login.html";
-    return;
+      alert("로그인이 필요합니다.");
+      window.location.href = "login.html";
+      return;
   }
 
   try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+      console.log(`📢 게시물 요청: ${url}`);
+      const response = await fetch(url, {
+          method: "GET",
+          headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+              Accept: "application/json",
+          },
+      });
 
-    const result = await response.json();
+      if (!response.ok) throw new Error("게시물을 불러오는 데 실패했습니다.");
 
-    if (response.ok) {
-      const {
-        id,
-        title,
-        content,
-        total_likes,
-        created_at,
-        category_name,
-        images,
-      } = result;
+      const result = await response.json();
+      console.log("📌 가져온 게시물:", result);
 
-      console.log("📌 가져온 게시물 ID:", id);
+      updatePostContent(result); // ✅ UI 업데이트 (▼ 버튼 포함)
+  } catch (error) {
+      console.error("📌 게시물 가져오기 오류:", error);
+      alert("게시물 데이터를 불러오는 중 오류가 발생했습니다.");
+  }
+}
 
-      const formattedDate = new Date(created_at)
-        .toLocaleString("ko-KR", {
+// ✅ 게시물 UI 업데이트 + ▼ 버튼 추가
+async function updatePostContent(post) {
+  const { id, title, content, created_at, category_name, images, liked_by_user, total_likes } = post;
+
+  console.log(`📢 가져온 total_likes: ${total_likes}`);
+
+  document.querySelector(".post_title").textContent = title;
+  document.querySelector(".post_title").setAttribute("data-post-id", id);
+
+  const heartButton = document.querySelector(".heart_list");
+  heartButton.setAttribute("data-id", id);
+  heartButton.innerHTML = `
+      <span class="heart-icon">${liked_by_user ? "❤️" : "🤍"}</span> ${total_likes}
+      <span class="heart-dropdown"> ▼</span>  <!-- ✅ ▼ 버튼 추가 -->
+  `;
+
+  document.querySelector(".post_writer_list a").textContent = new Date(created_at)
+      .toLocaleString("ko-KR", {
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
-        })
-        .replace(/\./g, "")
-        .replace(" ", ". ")
-        .replace("오전", "")
-        .replace("오후", "")
-        .trim();
+      })
+      .replace(/\./g, "")
+      .replace(" ", ". ")
+      .replace("오전", "")
+      .replace("오후", "")
+      .trim();
 
-      document.querySelector(".post_title").textContent = title;
-      document.querySelector(".post_title").setAttribute("data-post-id", id);
+  document.querySelector(".post_category").textContent = `[${category_name}]`;
 
-      // ✅ 본문 정리
-      let cleanedContent = cleanUpCaptions(content);
-      cleanedContent = fixImageUrls(cleanedContent);
-      cleanedContent = removeUnnecessaryButtons(cleanedContent);
+  let cleanedContent = cleanUpCaptions(content);
+  cleanedContent = fixImageUrls(cleanedContent);
+  cleanedContent = removeUnnecessaryButtons(cleanedContent);
+  
+  document.querySelector(".post_contents").innerHTML = cleanedContent;
 
-      // ✅ 이미지 태그를 figure 태그로 변환하여 캡션 추가
-      if (images && images.length > 0) {
-        images.forEach((imageData) => {
-          const { image_url, caption } = imageData;
-          const captionText = caption ? caption : ""; // 캡션이 없는 경우 빈 문자열 처리
+  // ✅ ▼ 버튼 클릭 이벤트 다시 추가 (새로고침 후에도 동작하도록 보장)
+  document.querySelector(".heart-dropdown").addEventListener("click", async function (event) {
+      event.stopPropagation();
+      console.log("📢 ▼ 버튼 클릭됨, 좋아요한 유저 목록 요청 시작");
 
-          // ✅ 기존 <img> 태그를 figure + figcaption으로 교체
-          const imageTag = `
-      <figure style="text-align: center; margin: 15px 0px;">
-        <img src="${image_url}" class="editable-image" 
-            style="max-width: 300px; height: auto; margin-top: 10px; border-radius: 5px;">
-        <figcaption style="font-size: 12px; color: gray; margin-top: 5px; text-align: center;">
-          ${captionText}
-        </figcaption>
-      </figure>
-    `;
-
-          cleanedContent = cleanedContent.replace(
-            new RegExp(`<img[^>]*src=["']${image_url}["'][^>]*>`, "g"),
-            imageTag
-          );
-        });
+      const postId = heartButton.getAttribute("data-id");
+      if (!postId) {
+          console.error("❌ postId가 없습니다.");
+          return;
       }
 
-      // ✅ 최종 정리된 HTML 본문 삽입
-      document.querySelector(".post_contents").innerHTML = cleanedContent;
+      await showLikedUsers(postId, heartButton);
+  });
 
-      document.querySelector(".heart_list").textContent = `공감 ${total_likes}`;
-      document.querySelector(".post_writer_list a").textContent = formattedDate;
-      document.querySelector(
-        ".post_category"
-      ).textContent = `[${category_name}]`;
-    } else {
-      alert(result.error || "게시물 데이터를 불러오는 데 실패했습니다.");
-    }
+  // ✅ 하트 클릭 이벤트 추가 (좋아요 토글)
+  heartButton.addEventListener("click", async function (event) {
+      const heartIcon = this.querySelector(".heart-icon");
+
+      if (event.target === heartIcon || event.target.closest(".heart-icon")) {
+          const postId = this.getAttribute("data-id");
+          if (!postId) {
+              console.error("❌ postId가 없습니다.");
+              return;
+          }
+          await toggleLike(postId, heartButton);
+      }
+  });
+}
+
+// ✅ 좋아요(공감) 토글 기능
+async function toggleLike(postId, heartButton) {
+  const url = `http://127.0.0.1:8000/posts/${postId}/heart/`;
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      return;
+  }
+
+  try {
+      console.log(`🔥 좋아요 요청: ${url}`);
+
+      const response = await fetch(url, {
+          method: "POST",
+          headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+          },
+      });
+
+      const result = await response.json();
+      console.log("📢 서버 응답:", result);
+
+      if (!response.ok) {
+          console.error(`❌ 좋아요 요청 실패 (HTTP ${response.status})`);
+          return;
+      }
+
+      // ✅ 좋아요 상태 업데이트 (`like_count` 사용)
+      if (result.like_count !== undefined) {
+          const isLiked = result.message === "하트 추가";
+          console.log(`🔥 좋아요 상태 변경: ${isLiked ? "❤️" : "🤍"}`);
+
+          // ✅ 하트 버튼 업데이트
+          heartButton.innerHTML = `
+              <span class="heart-icon">${isLiked ? "❤️" : "🤍"}</span> ${result.like_count}
+              <span class="heart-dropdown"> ▼</span>
+          `;
+      } else {
+          console.error("❌ 서버 응답에 like_count 없음:", result);
+      }
   } catch (error) {
-    console.error("📌 게시물 데이터 가져오기 오류:", error);
-    alert("게시물 데이터를 불러오는 중 오류가 발생했습니다.");
+      console.error("❌ 서버 연결 오류:", error);
   }
 }
+
+// ✅ 좋아요한 유저 리스트 불러오기 & 팝업 표시
+async function showLikedUsers(postId, heartButton) {
+  const url = `http://127.0.0.1:8000/posts/${postId}/heart/users/`;
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      return;
+  }
+
+  try {
+      console.log(`📢 좋아요한 유저 목록 요청: ${url}`);
+
+      const response = await fetch(url, {
+          method: "GET",
+          headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+          },
+      });
+
+      if (!response.ok) {
+          console.error(`❌ 좋아요한 유저 목록 불러오기 실패 (HTTP ${response.status})`);
+          return;
+      }
+
+      const result = await response.json();
+      console.log("📢 좋아요한 유저 목록:", result);
+
+      createLikedUsersPopup(result.liked_users, heartButton);
+
+  } catch (error) {
+      console.error("❌ 좋아요한 유저 목록 가져오기 오류:", error);
+  }
+}
+
+function createLikedUsersPopup(likedUsers, heartButton, likeCount) {
+  // ✅ 기존 팝업 제거 (중복 방지)
+  const existingPopup = document.querySelector(".liked-users-popup");
+  if (existingPopup) existingPopup.remove();
+
+  if (!likedUsers || likedUsers.length === 0) {
+      console.warn("⚠️ 좋아요한 유저 없음.");
+      return;
+  }
+
+  // ✅ 중복 제거 (같은 유저가 여러 번 추가되는 경우 방지)
+  const uniqueUsers = Array.from(new Map(likedUsers.map(user => [user.urlname, user])).values());
+
+  // ✅ 좋아요 개수에 맞게 제한
+  const displayedUsers = uniqueUsers.slice(0, likeCount);
+
+  const popup = document.createElement("div");
+  popup.classList.add("liked-users-popup");
+  popup.innerHTML = `
+      <div class="popup-header">
+          <span>좋아요한 사용자</span>
+          <button class="close-popup">✖</button>
+      </div>
+      <div class="popup-content"></div>
+  `;
+
+  const content = popup.querySelector(".popup-content");
+  displayedUsers.forEach(user => {
+      const userElement = document.createElement("div");
+      userElement.classList.add("liked-user");
+
+      userElement.innerHTML = `
+          <div class="user-info">
+              <img src="http://127.0.0.1:8000${user.user_pic}" alt="${user.username}" class="user-pic">
+              <span class="user-name">${user.username}</span>
+          </div>
+      `;
+
+      content.appendChild(userElement);
+  });
+
+  // ✅ X 버튼 클릭 시 팝업 닫기
+  popup.querySelector(".close-popup").addEventListener("click", () => {
+      popup.remove();
+  });
+
+  // ✅ heartButton 위치 기준으로 팝업 위치 설정
+  document.body.appendChild(popup);
+  const rect = heartButton.getBoundingClientRect();
+  popup.style.position = "absolute";
+  popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+  popup.style.left = `${rect.left + window.scrollX}px`;
+}
+
+
 
 async function fetchLoggedInUserUrlname() {
   try {
@@ -409,7 +552,9 @@ async function fetchPostCount() {
   try {
     const blogOwnerUrlname = await fetchLoggedInUserUrlname();
     if (!blogOwnerUrlname) {
-      console.warn("⚠️ URL name을 가져올 수 없어 게시물 개수를 불러오지 않습니다.");
+      console.warn(
+        "⚠️ URL name을 가져올 수 없어 게시물 개수를 불러오지 않습니다."
+      );
       return;
     }
 
@@ -439,39 +584,110 @@ async function fetchPostCount() {
         console.warn("⚠️ '.post_list_title strong' 요소를 찾을 수 없습니다.");
       }
     } else {
-      console.error(`❌ 게시물 개수 가져오기 실패: ${result.detail || JSON.stringify(result)}`);
+      console.error(
+        `❌ 게시물 개수 가져오기 실패: ${
+          result.detail || JSON.stringify(result)
+        }`
+      );
     }
   } catch (error) {
     console.error("❌ 게시물 개수 가져오는 중 오류 발생:", error);
   }
 }
 
-// ✅ 페이지 로드 후 실행
-document.addEventListener("DOMContentLoaded", fetchPostCount);
-
-
-// ✅ 페이지네이션 버튼 클릭 이벤트 추가
 document.addEventListener("DOMContentLoaded", function () {
   const paginationLinks = document.querySelectorAll(".pagination .num");
+  const prevButton = document.querySelector(".pagination .left");
+  const nextButton = document.querySelector(".pagination .right");
+  const postsPerPage = 8; // ✅ 8개 단위 페이지 이동
 
+  // ✅ 현재 페이지 가져오기
+  function getCurrentPageFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get("n"), 10);
+    return isNaN(page) || page < 1 ? 1 : page; // 기본값 1
+  }
+
+  // ✅ 페이지 UI 업데이트 (현재 페이지 버튼 활성화)
+  function updatePaginationUI() {
+    const currentPage = getCurrentPageFromURL();
+    paginationLinks.forEach((link) => {
+      const pageNum = parseInt(link.textContent.trim(), 10);
+      if (pageNum === currentPage) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  }
+
+  // ✅ 전체 페이지 개수 가져오기
+  async function fetchTotalPages() {
+    try {
+      const blogOwnerUrlname = await fetchLoggedInUserUrlname();
+      if (!blogOwnerUrlname) return 1;
+
+      const url = `http://127.0.0.1:8000/posts/count/${blogOwnerUrlname}/`;
+      const accessToken = localStorage.getItem("access_token");
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: accessToken ? `Bearer ${accessToken}` : "",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("게시물 개수를 가져올 수 없습니다.");
+      const data = await response.json();
+
+      return Math.ceil(data.post_count / postsPerPage); // ✅ 전체 페이지 수 반환
+    } catch (error) {
+      console.error("❌ 전체 페이지 수 불러오기 오류:", error);
+      return 1; // 기본값 1
+    }
+  }
+
+  // ✅ 페이지 이동 함수 (이전/다음 버튼 클릭 시 호출)
+  async function movePage(offset) {
+    const currentPage = getCurrentPageFromURL();
+    const totalPages = await fetchTotalPages();
+
+    let newPage = currentPage + offset;
+    newPage = Math.max(1, Math.min(newPage, totalPages)); // ✅ 1~totalPages 사이 값 유지
+
+    console.log(`📌 이동할 페이지: ${newPage}`);
+    window.location.search = `?n=${newPage}`; // ✅ URL 파라미터만 변경 (페이지 새로고침)
+  }
+
+  // ✅ 숫자 버튼 클릭 시 페이지 이동
   paginationLinks.forEach((link) => {
     link.addEventListener("click", function (event) {
-      event.preventDefault(); // 기본 링크 이동 방지
-      const n = this.textContent.trim(); // 클릭한 숫자 (n번째 게시물)
-
-      console.log(`📌 선택된 게시물 번호: ${n}`);
-
-      // n번째 최신 게시물 가져오기
-      fetchRecentPost(n);
+      event.preventDefault();
+      const n = parseInt(this.textContent.trim(), 10);
+      if (!isNaN(n)) {
+        console.log(`📌 선택된 페이지 번호: ${n}`);
+        window.location.search = `?n=${n}`; // ✅ URL 변경 (새로고침 발생)
+      }
     });
   });
 
-  // 기본적으로 가장 최신 게시물(n=1) 조회
-  fetchRecentPost();
+  // ✅ "이전" 버튼 클릭 이벤트 (8페이지 단위 뒤로 이동)
+  prevButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    movePage(-8);
+  });
 
-  // ✅ "전체보기 X개의 글" 데이터 업데이트
-  fetchPostCount();
+  // ✅ "다음" 버튼 클릭 이벤트 (8페이지 단위 앞으로 이동)
+  nextButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    movePage(8);
+  });
+
+  // ✅ 페이지 로드 후 현재 페이지 버튼 강조
+  updatePaginationUI();
 });
+
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -535,6 +751,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const itemsPerPage = 12; // ✅ 한 페이지당 3명 x 4줄 = 12명
     const totalPages = Math.ceil(neighbors.length / itemsPerPage);
 
+    function updatePaginationButtons() {
+      prevPageBtn.classList.toggle("disabled", currentPage === 1);
+      nextPageBtn.classList.toggle("disabled", currentPage === totalPages);
+      pageIndicator.innerText = `${currentPage} / ${totalPages}`;
+    }
+
     function renderNeighbors(page) {
       neighborContainer.innerHTML = "";
       const start = (page - 1) * itemsPerPage;
@@ -568,7 +790,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         neighborContainer.innerHTML += neighborHtml;
       });
 
-      pageIndicator.innerText = `${currentPage} / ${totalPages}`;
+      updatePaginationButtons();
     }
 
     prevPageBtn.addEventListener("click", () => {
@@ -590,6 +812,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("❌ 서버 연결 오류:", error);
   }
 });
+
 
 // ✅ 카테고리 데이터를 가져오는 함수
 async function fetchCategories(urlname) {
@@ -658,5 +881,3 @@ function updateCategoryUI(categories) {
     categoryListContainer.appendChild(li);
   });
 }
-
-//좋아요 기능

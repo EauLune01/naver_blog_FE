@@ -900,12 +900,18 @@
                 ${cleanedContent}  
             </div>
             <div class="post_last_list">
-                <a class="heart_list">공감 ${post.total_likes}</a>
-                <span class="comment_toggle_button" data-post-id="${post.id}" style="cursor: pointer;">
-    댓글 보기
-</span>
+    <!-- ✅ 좋아요 버튼 -->
+    <button class="heart_list" data-id="${post.id}">
+        <span class="heart-icon">${post.liked_by_user ? "❤️" : "🤍"}</span> ${post.total_likes}
+        <span class="heart-dropdown"> ▼</span>  <!-- ✅ ▼ 버튼 추가 (이웃 목록 보기) -->
+    </button>
 
-            </div>
+    <!-- ✅ 댓글 보기 버튼 -->
+    <span class="comment_toggle_button" data-post-id="${post.id}" style="cursor: pointer;">
+        댓글 보기
+    </span>
+</div>
+
 
             <!-- ✅ 댓글 섹션 (초기에는 숨김) -->
             <div id="comment_section_${post.id}" class="comment_section" style="display: none;">
@@ -1585,6 +1591,166 @@
           console.error("❌ 서버 연결 오류:", error);
         }
       });
+
+
+      document.addEventListener("DOMContentLoaded", function () {
+    console.log("📢 이벤트 리스너 등록 완료");
+
+    // ✅ 이벤트 위임: 좋아요 버튼 클릭 감지
+    document.body.addEventListener("click", async function (event) {
+        // ❤️/🤍 좋아요 버튼 클릭
+        if (event.target.closest(".heart_list")) {
+            const heartButton = event.target.closest(".heart_list");
+            const postId = heartButton.getAttribute("data-id");
+
+            if (!postId) {
+                console.error("❌ postId가 없습니다.");
+                return;
+            }
+
+            console.log(`🔥 좋아요 버튼 클릭됨 (postId: ${postId})`);
+            await toggleLike(postId, heartButton);
+        }
+
+        // ▼ 버튼 클릭 (이웃 목록 보기)
+        if (event.target.closest(".heart-dropdown")) {
+            event.stopPropagation();
+            const heartButton = event.target.closest(".heart_list");
+            const postId = heartButton.getAttribute("data-id");
+
+            if (!postId) {
+                console.error("❌ postId가 없습니다.");
+                return;
+            }
+
+            console.log(`📢 ▼ 버튼 클릭됨 (postId: ${postId})`);
+            await showNeighborList(postId, heartButton);
+        }
+    });
+});
+
+// ✅ 좋아요(공감) 토글 기능
+async function toggleLike(postId, heartButton) {
+    const url = `http://127.0.0.1:8000/posts/${postId}/heart/`;
+    const accessToken = localStorage.getItem("access_token");
+
+    if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    try {
+        console.log(`🔥 좋아요 요청: ${url}`);
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await response.json();
+        console.log("📢 서버 응답:", result);
+
+        if (!response.ok) {
+            console.error(`❌ 좋아요 요청 실패 (HTTP ${response.status})`);
+            return;
+        }
+
+        // ✅ 좋아요 상태 업데이트
+        if (result.like_count !== undefined) {
+            const isLiked = result.message === "하트 추가";
+            console.log(`🔥 좋아요 상태 변경: ${isLiked ? "❤️" : "🤍"}`);
+
+            // ✅ 하트 버튼 UI 업데이트
+            heartButton.innerHTML = `
+                <span class="heart-icon">${isLiked ? "❤️" : "🤍"}</span> ${result.like_count}
+                <span class="heart-dropdown"> ▼</span>  <!-- ▼ 버튼 유지 (이웃 목록 보기) -->
+            `;
+        } else {
+            console.error("❌ 서버 응답에 like_count 없음:", result);
+        }
+    } catch (error) {
+        console.error("❌ 서버 연결 오류:", error);
+    }
+}
+
+// ✅ 이웃 목록 불러오기 & 팝업 표시 (▼ 버튼 클릭 시)
+async function showNeighborList(postId, heartButton) {
+    const url = `http://127.0.0.1:8000/posts/${postId}/neighbors/`;
+    const accessToken = localStorage.getItem("access_token");
+
+    if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    try {
+        console.log(`📢 이웃 목록 요청: ${url}`);
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`❌ 이웃 목록 불러오기 실패 (HTTP ${response.status})`);
+            return;
+        }
+
+        const result = await response.json();
+        console.log("📢 이웃 목록:", result);
+
+        createNeighborPopup(result.neighbors, heartButton);
+
+    } catch (error) {
+        console.error("❌ 이웃 목록 가져오기 오류:", error);
+    }
+}
+
+// ✅ 이웃 목록을 팝업으로 표시
+function createNeighborPopup(neighbors, heartButton) {
+    // 기존 팝업 제거 (중복 방지)
+    document.querySelectorAll(".neighbor-popup").forEach(popup => popup.remove());
+
+    if (!neighbors || neighbors.length === 0) {
+        alert("아직 이웃이 없습니다.");
+        return;
+    }
+
+    // 팝업 생성
+    const popup = document.createElement("div");
+    popup.classList.add("neighbor-popup");
+    popup.innerHTML = `
+        <div class="popup-header">
+            <span>이웃 목록</span>
+            <button class="close-popup">✖</button>
+        </div>
+        <div class="popup-content">
+            ${neighbors.map(user => `
+                <div class="neighbor-user">
+                    <img src="http://127.0.0.1:8000${user.user_pic}" alt="${user.username}" class="user-pic">
+                    <span class="user-name">${user.username}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // 닫기 버튼 이벤트 추가
+    popup.querySelector(".close-popup").addEventListener("click", () => popup.remove());
+
+    // heartButton 위치 기준으로 팝업 위치 설정
+    document.body.appendChild(popup);
+    const rect = heartButton.getBoundingClientRect();
+    popup.style.position = "absolute";
+    popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+    popup.style.left = `${rect.left + window.scrollX}px`;
+}
+
     </script>
   </body>
 </html>

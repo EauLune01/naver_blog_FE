@@ -213,22 +213,24 @@
     <div class="post_content">
       <div class="post_title_content">
         <div class="post_category"></div>
-        <div class="post_title" data-post-id="123">
+        <div class="post_title" data-post-id="456">
           첫번째 글을 작성해보세요!
         </div>
         <div class="post_writer_list">
           <strong class="user-nickname" style="color: black">멘아</strong
           >&nbsp;<a>2024. 9. 24. 23:21</a>
-          <a style="float: right; padding-right: 10px">URL 복사</a>
+          <a class="neighbor_insert">+이웃추가</a
+          ><a style="float: right; padding-right: 10px">URL 복사</a>
           <a class="edit_post">수정</a>
         </div>
         <hr class="post_hr" />
       </div>
       <div class="post_contents"></div>
       <div class="post_last_list">
-        <a class="heart_list">공감</a>
-        <button id="toggle-comment-btn" class="comment_list">댓글 쓰기</button>
+        <button class="heart_list" data-id="123">🤍 10</button>
+        <button id="toggle-comment-btn" class="comment_list">💬 댓글 쓰기</button>
       </div>
+    
 
       <!-- 댓글 모듈 삽입 -->
       <div id="comment-section">
@@ -257,7 +259,8 @@
       </div>
     </div>
 
-    <!— ✅ JavaScript 분리 —>
+    <!-- ✅ JavaScript 분리 -->
     <script src="myblog.js"></script>
   </body>
 </html>
+
