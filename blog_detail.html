@@ -527,7 +527,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ✅ 5. 프롤로그 링크 설정
-    setupPrologLink(loggedInUrlname);
+    setupPrologLink();
     setupBlogHomeLink(loggedInUrlname);
 
     // ✅ 6. 게시물 가져오기
@@ -670,20 +670,22 @@ function getFullMediaUrl(userPic) {
 
 
             
-      // 🔹 **프롤로그 링크 설정**
-      function setupPrologLink(username) {
-        const prologLink = document.getElementById("prolog-link");
-        if (prologLink) {
-          prologLink.href = `prolog.html?user=${encodeURIComponent(username)}`;
-        }
-      }
+    // 🔹 **프롤로그 링크 설정 (무조건 myprolog.html로 연결)**
+function setupPrologLink() {
+  const prologLink = document.getElementById("prolog-link");
+  if (prologLink) {
+    prologLink.href = "myprolog.html";
+  }
+}
+
+
 
       // 🔹 **블로그 홈 설정**
-      function setupBlogHomeLink(username) {
+      function setupBlogHomeLink(urlname) {
         const BlogHomeLink = document.getElementById("bloghome-link");
         if (BlogHomeLink) {
-          BlogHomeLink.href = `main_login.html?user=${encodeURIComponent(
-            username
+          BlogHomeLink.href = `main_login.html?urlname=${encodeURIComponent(
+            urlname
           )}`;
         }
       }
